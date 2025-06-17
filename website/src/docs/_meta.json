@@ -1,0 +1,22 @@
+[
+  {
+    "type": "dir",
+    "name": "getting-started",
+    "label": "Getting Started"
+  },
+  {
+    "type": "dir",
+    "name": "api",
+    "label": "API"
+  },
+  {
+    "type": "dir",
+    "name": "guides",
+    "label": "Guides"
+  },
+  {
+    "type": "file",
+    "name": "feature-comparison",
+    "label": "Feature Comparison"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "name": "@react-native-harness/playground",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "react-native": "*",
+    "react-native-harness": "workspace:*"
+  }
+}

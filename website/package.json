@@ -1,0 +1,19 @@
+{
+  "name": "@react-native-harness/docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "rspress build",
+    "dev": "rspress dev",
+    "preview": "rspress preview"
+  },
+  "dependencies": {
+    "@callstack/rspress-preset": "^0.4.1",
+    "@callstack/rspress-theme": "^0.4.1",
+    "@rspress/core": "2.0.0-beta.32"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.17",
+    "@types/react": "^19.1.8"
+  }
+}
