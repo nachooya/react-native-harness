@@ -1,3 +1,6 @@
+// This is adapted version of https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/integrations/chai/setup.ts
+// Credits to Vitest team for the original implementation.
+
 import {
   JestAsymmetricMatchers,
   JestChaiExpect,

@@ -72,7 +72,9 @@ describe('expect - Truthiness', () => {
       expect('hello').toBeTruthy();
       expect({}).toBeTruthy();
       expect([]).toBeTruthy();
-      expect(function () {}).toBeTruthy();
+      expect(function () {
+        // noop
+      }).toBeTruthy();
     });
 
     test('should fail for falsy values', () => {
@@ -330,7 +332,9 @@ describe('expect - Type Checking', () => {
       expect(true).toBeTypeOf('boolean');
       expect(undefined).toBeTypeOf('undefined');
       expect(Symbol('test')).toBeTypeOf('symbol');
-      expect(() => {}).toBeTypeOf('function');
+      expect(() => {
+        // noop
+      }).toBeTypeOf('function');
       expect({}).toBeTypeOf('object');
     });
 
@@ -406,7 +410,11 @@ describe('expect - Exceptions', () => {
     });
 
     test('should fail for functions that do not throw', () => {
-      expect(() => expect(() => {}).toThrow()).toThrow();
+      expect(() =>
+        expect(() => {
+          // noop
+        }).toThrow()
+      ).toThrow();
     });
 
     test('should fail for wrong error message', () => {
@@ -558,10 +566,10 @@ describe('expect - Custom Messages', () => {
 
 describe('expect - Edge Cases', () => {
   test('should handle circular references', () => {
-    const circular: any = { a: 1 };
+    const circular: Record<string, unknown> = { a: 1 };
     circular.self = circular;
 
-    const circular2: any = { a: 1 };
+    const circular2: Record<string, unknown> = { a: 1 };
     circular2.self = circular2;
 
     expect(circular).toEqual(circular2);

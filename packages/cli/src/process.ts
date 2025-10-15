@@ -25,7 +25,7 @@ export const killWithAwait = (child: ChildProcess): Promise<void> => {
 
     try {
       child.kill();
-    } catch (error) {
+    } catch {
       clearTimeout(timeout);
       resolve();
     }

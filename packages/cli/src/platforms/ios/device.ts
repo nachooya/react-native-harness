@@ -1,6 +1,9 @@
 import { spawn, spawnAndForget } from '@react-native-harness/tools';
 
-export const listDevices = async (): Promise<any> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Device = any;
+
+export const listDevices = async (): Promise<{ devices: Device[] }> => {
   const { stdout } = await spawn('xcrun', [
     'simctl',
     'list',
@@ -12,7 +15,7 @@ export const listDevices = async (): Promise<any> => {
 
 export const getDeviceByName = async (
   simulatorName: string
-): Promise<any | null> => {
+): Promise<Device | null> => {
   const devices = await listDevices();
 
   for (const runtime in devices.devices) {

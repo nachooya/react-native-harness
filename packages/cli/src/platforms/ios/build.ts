@@ -1,5 +1,6 @@
 import { spawn, spawnAndForget } from '@react-native-harness/tools';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const listDevices = async (): Promise<any> => {
   const { stdout } = await spawn('xcrun', [
     'simctl',
@@ -13,6 +14,7 @@ export const listDevices = async (): Promise<any> => {
 export const getDeviceByName = async (
   simulatorName: string,
   systemVersion: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): Promise<any | null> => {
   const devices = await listDevices();
   const expectedRuntimeId = `com.apple.CoreSimulator.SimRuntime.iOS-${systemVersion.replace(
@@ -27,6 +29,7 @@ export const getDeviceByName = async (
   }
 
   const runtimeDevices = devices.devices[runtime];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const device = runtimeDevices.find((d: any) => d.name === simulatorName);
 
   if (device) {

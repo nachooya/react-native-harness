@@ -7,7 +7,13 @@ export const getEmulatorNameFromId = async (
   emulatorId: string
 ): Promise<string | null> => {
   try {
-    const { stdout } = await spawn('adb', ['-s', emulatorId, 'emu', 'avd', 'name']);
+    const { stdout } = await spawn('adb', [
+      '-s',
+      emulatorId,
+      'emu',
+      'avd',
+      'name',
+    ]);
     const avdName = stdout.split('\n')[0].trim();
     return avdName || null;
   } catch {
@@ -48,7 +54,13 @@ export const getEmulatorStatus = async (
 
   try {
     // Check if device is fully booted by checking boot completion
-    const { stdout } = await spawn('adb', ['-s', emulatorId, 'shell', 'getprop', 'sys.boot_completed']);
+    const { stdout } = await spawn('adb', [
+      '-s',
+      emulatorId,
+      'shell',
+      'getprop',
+      'sys.boot_completed',
+    ]);
     const bootCompleted = stdout.trim() === '1';
     return bootCompleted ? 'running' : 'loading';
   } catch {
@@ -69,17 +81,17 @@ export const runEmulator = async (name: string): Promise<ChildProcess> => {
       return;
     } else if (status === 'loading') {
       // Check again in 2 seconds
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       await checkStatus();
     } else {
       // Still stopped, check again in 1 second
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       await checkStatus();
     }
   };
 
   // Start checking status after a brief delay to allow emulator to start
-  await new Promise(resolve => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   await checkStatus();
 
   return nodeChildProcess;
@@ -105,7 +117,15 @@ export const isAppInstalled = async (
   bundleId: string
 ): Promise<boolean> => {
   try {
-    const { stdout } = await spawn('adb', ['-s', emulatorId, 'shell', 'pm', 'list', 'packages', bundleId]);
+    const { stdout } = await spawn('adb', [
+      '-s',
+      emulatorId,
+      'shell',
+      'pm',
+      'list',
+      'packages',
+      bundleId,
+    ]);
     return stdout.trim() !== '';
   } catch {
     return false;
@@ -114,26 +134,4 @@ export const isAppInstalled = async (
 
 export const reversePort = async (port: number): Promise<void> => {
   await spawn('adb', ['reverse', `tcp:${port}`, `tcp:${port}`]);
-};
-
-export const getEmulatorScreenshot = async (
-  emulatorId: string,
-  name: string = `${emulatorId}-${new Date()
-    .toISOString()
-    .replace(/:/g, '-')
-    .replace(/\//g, '-')}.png`
-): Promise<string> => {
-  // Use screencap to save directly to device, then pull the file
-  const devicePath = '/sdcard/screenshot.png';
-
-  // Take screenshot and save to device
-  await spawn('adb', ['-s', emulatorId, 'shell', 'screencap', '-p', devicePath]);
-
-  // Pull the file from device to local
-  await spawn('adb', ['-s', emulatorId, 'pull', devicePath, name]);
-
-  // Clean up the file on device
-  await spawn('adb', ['-s', emulatorId, 'shell', 'rm', devicePath]);
-
-  return name;
 };

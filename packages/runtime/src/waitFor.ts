@@ -34,7 +34,9 @@ export function waitFor<T>(
   return new Promise<T>((resolve, reject) => {
     let lastError: unknown;
     let promiseStatus: 'idle' | 'pending' | 'resolved' | 'rejected' = 'idle';
+    // eslint-disable-next-line prefer-const
     let timeoutId: ReturnType<typeof setTimeout>;
+    // eslint-disable-next-line prefer-const
     let intervalId: ReturnType<typeof setInterval>;
 
     const onResolve = (result: T): void => {
@@ -72,7 +74,7 @@ export function waitFor<T>(
         if (
           result !== null &&
           typeof result === 'object' &&
-          typeof (result as any).then === 'function'
+          typeof (result as unknown as PromiseLike<T>).then === 'function'
         ) {
           const thenable = result as PromiseLike<T>;
           promiseStatus = 'pending';
@@ -106,6 +108,7 @@ export function waitFor<T>(
 
 export type WaitUntilCallback<T> = () => T | Promise<T>;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/no-empty-object-type
 export interface WaitUntilOptions
   extends Pick<WaitForOptions, 'interval' | 'timeout'> {}
 
@@ -121,7 +124,9 @@ export function waitUntil<T>(
 
   return new Promise<Truthy<T>>((resolve, reject) => {
     let promiseStatus: 'idle' | 'pending' | 'resolved' | 'rejected' = 'idle';
+    // eslint-disable-next-line prefer-const
     let timeoutId: ReturnType<typeof setTimeout>;
+    // eslint-disable-next-line prefer-const
     let intervalId: ReturnType<typeof setInterval>;
 
     const onReject = (error?: Error) => {

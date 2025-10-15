@@ -1,4 +1,4 @@
-import { spawn } from '@react-native-harness/tools';
+import { spawn, SubprocessError } from '@react-native-harness/tools';
 
 export type IOSSimulatorStatus = 'stopped' | 'loading' | 'running';
 
@@ -25,6 +25,7 @@ export const getSimulatorDeviceId = async (
       return null;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const device = runtime.find((d: any) => d.name === simulatorName);
 
     if (device) {
@@ -57,6 +58,7 @@ export const getAvailableSimulators = async (): Promise<
     for (const runtime in devices.devices) {
       if (runtime.includes('iOS')) {
         const runtimeDevices = devices.devices[runtime];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         runtimeDevices.forEach((device: any) => {
           if (device.isAvailable) {
             simulators.push({
@@ -90,6 +92,7 @@ export const getSimulatorStatus = async (
     for (const runtime in devices.devices) {
       if (runtime.includes('iOS')) {
         const runtimeDevices = devices.devices[runtime];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const device = runtimeDevices.find((d: any) => d.udid === udid);
 
         if (device) {
@@ -114,9 +117,10 @@ export const getSimulatorStatus = async (
 export const runSimulator = async (udid: string): Promise<void> => {
   try {
     await spawn('xcrun', ['simctl', 'boot', udid]);
-  } catch (bootError: any) {
+  } catch (bootError) {
     // Ignore if simulator is already booted
     if (
+      bootError instanceof SubprocessError &&
       !bootError.stderr?.includes(
         'Unable to boot device in current state: Booted'
       )
@@ -153,9 +157,10 @@ export const stopSimulator = async (udid: string): Promise<void> => {
 const stopSimulatorById = async (udid: string): Promise<void> => {
   try {
     await spawn('xcrun', ['simctl', 'shutdown', udid]);
-  } catch (shutdownError: any) {
+  } catch (shutdownError) {
     // Ignore if simulator is already shut down
     if (
+      shutdownError instanceof SubprocessError &&
       !shutdownError.stderr?.includes(
         'Unable to shutdown device in current state: Shutdown'
       )

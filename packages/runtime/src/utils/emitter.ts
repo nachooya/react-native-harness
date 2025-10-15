@@ -26,6 +26,7 @@ export const getEmitter = <TEvents>() => {
   };
 };
 
+/* eslint-disable no-redeclare */
 export function combineEventEmitters<TEvents0, TEvents1>(
   emitter0: EventEmitter<TEvents0>,
   emitter1: EventEmitter<TEvents1>

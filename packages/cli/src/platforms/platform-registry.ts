@@ -20,7 +20,7 @@ export const getPlatformAdapter = async (
 
   try {
     return platformAdapters[platformName as keyof typeof platformAdapters];
-  } catch (error) {
+  } catch {
     throw new Error(`Platform adapter for ${platformName} not found`);
   }
 };

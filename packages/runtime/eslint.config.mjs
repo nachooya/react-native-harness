@@ -5,12 +5,6 @@ export default [
   ...baseConfig,
   ...nx.configs['flat/react'],
   {
-    files: ['./src/rntl/**/*.ts'],
-    rules: {
-      'react-hooks/rules-of-hooks': 'off',
-    },
-  },
-  {
-    ignores: ['public', '.cache', 'node_modules'],
+    ignores: ['public', '.cache', 'node_modules', 'assets'],
   },
 ];

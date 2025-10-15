@@ -152,7 +152,7 @@ export const uninstallApp = async (
 export const startPortForwarding = async (
   deviceId: string,
   port: number,
-  forward: boolean = true
+  forward = true
 ): Promise<void> => {
   await spawn('kepler', [
     'device',
@@ -172,7 +172,7 @@ export const startPortForwarding = async (
 export const stopPortForwarding = async (
   deviceId: string,
   port: number,
-  forward: boolean = true
+  forward = true
 ): Promise<void> => {
   await spawn('kepler', [
     'device',

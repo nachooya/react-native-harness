@@ -16,7 +16,7 @@ declare module 'react-native/Libraries/Core/Devtools/symbolicateStackTrace' {
       | {
           row: number;
           column: number;
-          [key: string]: any;
+          [key: string]: unknown;
         }
       | null
       | undefined;
@@ -30,7 +30,7 @@ declare module 'react-native/Libraries/Core/Devtools/symbolicateStackTrace' {
 
   export default function symbolicateStackTrace(
     stack: ReadonlyArray<StackFrame>,
-    extraData?: any
+    extraData?: unknown
   ): Promise<SymbolicatedStackTrace>;
 }
 

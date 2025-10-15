@@ -1,3 +1,6 @@
+// This is adapted version of https://github.com/vitest-dev/vitest/blob/main/packages/vitest/src/integrations/chai/index.ts
+// Credits to Vitest team for the original implementation.
+
 import type { Assertion, ExpectStatic, MatcherState } from '@vitest/expect';
 import {
   addCustomEqualityTesters,
@@ -13,13 +16,16 @@ import * as chai from 'chai';
 import './setup.js';
 
 export function createExpect(): ExpectStatic {
-  const expect = ((value: any, message?: string): Assertion => {
+  const expect = ((value: unknown, message?: string): Assertion => {
     const { assertionCalls } = getState(expect);
     setState({ assertionCalls: assertionCalls + 1 }, expect);
     return chai.expect(value, message) as unknown as Assertion;
   }) as ExpectStatic;
   Object.assign(expect, chai.expect);
-  Object.assign(expect, (globalThis as any)[ASYMMETRIC_MATCHERS_OBJECT]);
+  Object.assign(
+    expect,
+    globalThis[ASYMMETRIC_MATCHERS_OBJECT as unknown as keyof typeof globalThis]
+  );
 
   expect.getState = () => getState<MatcherState>(expect);
   expect.setState = (state) => setState(state as Partial<MatcherState>, expect);
