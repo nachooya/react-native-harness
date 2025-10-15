@@ -4,9 +4,11 @@ import {
   getExpoCliPath,
   getTimeoutSignal,
   spawn,
-  SubprocessError,
   logger,
+  SubprocessError,
 } from '@react-native-harness/tools';
+import { isPortAvailable } from '../utils.js';
+import { MetroPortUnavailableError } from '../errors/errors.js';
 
 const METRO_PORT = 8081;
 
@@ -48,8 +50,14 @@ export const runMetro = async (isExpo = false): Promise<ChildProcess> => {
       return;
     }
 
-    throw error;
+    logger.error('Metro crashed unexpectedly', error);
   });
+
+  const isDefaultPortAvailable = await isPortAvailable(METRO_PORT);
+
+  if (!isDefaultPortAvailable) {
+    throw new MetroPortUnavailableError(METRO_PORT);
+  }
 
   await waitForMetro();
   return metro.nodeChildProcess;

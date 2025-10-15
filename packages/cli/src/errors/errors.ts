@@ -122,3 +122,10 @@ export class BundlingFailedError extends Error {
     this.name = 'BundlingFailedError';
   }
 }
+
+export class MetroPortUnavailableError extends Error {
+  constructor(public readonly port: number) {
+    super(`Metro port ${port} is not available`);
+    this.name = 'MetroPortUnavailableError';
+  }
+}

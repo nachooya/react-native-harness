@@ -13,6 +13,7 @@ import {
   AppNotInstalledError,
   BridgeTimeoutError,
   BundlingFailedError,
+  MetroPortUnavailableError,
 } from './errors.js';
 
 export const handleError = (error: unknown): void => {
@@ -201,6 +202,23 @@ export const handleError = (error: unknown): void => {
     console.error(
       `\nIf the app needs more time to start, consider increasing the timeout in the configuration.`
     );
+  } else if (error instanceof MetroPortUnavailableError) {
+    console.error(`\n❌ Metro Port Unavailable`);
+    console.error(`\nPort ${error.port} is already in use or unavailable.`);
+    console.error(`\nThis usually indicates that:`);
+    console.error(`  • Another Metro bundler instance is already running`);
+    console.error(`  • Another application is using port ${error.port}`);
+    console.error(`  • The port is blocked by a firewall or security software`);
+    console.error(`\nTo resolve this issue:`);
+    console.error(`  • Stop any running Metro bundler instances`);
+    console.error(
+      `  • Check for other applications using port ${error.port}: lsof -i :${error.port}`
+    );
+    console.error(`  • Kill the process using the port: kill -9 <PID>`);
+    console.error(
+      `  • Or use a different port by updating your Metro configuration`
+    );
+    console.error(`\nPlease free up the port and try again.`);
   } else {
     console.error(`\n❌ Unexpected Error`);
     console.error(error);
