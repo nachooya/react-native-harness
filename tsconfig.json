@@ -23,6 +23,15 @@
     },
     {
       "path": "./packages/babel-preset"
+    },
+    {
+      "path": "./packages/tools"
+    },
+    {
+      "path": "./packages/react-native-harness"
+    },
+    {
+      "path": "./packages/reporters"
     }
   ]
 }

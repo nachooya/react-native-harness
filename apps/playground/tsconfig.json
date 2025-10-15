@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../packages/react-native-harness"
+    },
+    {
       "path": "./tsconfig.app.json"
     }
   ]

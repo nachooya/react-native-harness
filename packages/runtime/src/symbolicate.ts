@@ -6,16 +6,18 @@ export const getCodeFrame = async (error: Error): Promise<CodeFrame | null> => {
   const parsedStack = parseErrorStack(error.stack);
   const symbolicatedStack = await symbolicateStackTrace(parsedStack);
 
-  if (!symbolicatedStack.codeFrame) {
+  if (!('codeFrame' in symbolicatedStack) || !symbolicatedStack.codeFrame) {
     return null;
   }
 
+  const codeFrame = symbolicatedStack.codeFrame as CodeFrame;
+
   // Normalize optionality (null -> undefined)
   return {
-    ...symbolicatedStack.codeFrame,
-    location: symbolicatedStack.codeFrame.location
+    ...codeFrame,
+    location: codeFrame.location
       ? {
-          ...symbolicatedStack.codeFrame.location,
+          ...codeFrame.location,
         }
       : undefined,
   };

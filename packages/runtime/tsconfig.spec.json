@@ -8,7 +8,9 @@
       "vite/client",
       "node",
       "vitest"
-    ]
+    ],
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM"]
   },
   "include": [
     "vite.config.ts",
@@ -24,7 +26,9 @@
     "src/**/*.test.jsx",
     "src/**/*.spec.jsx",
     "src/**/*.d.ts",
+    "src/react-native.d.ts",
     "src/**/*.ts",
-    "src/**/*.tsx"
+    "src/**/*.tsx",
+    "types/**/*.d.ts"
   ]
 }
