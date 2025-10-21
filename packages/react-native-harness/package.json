@@ -36,5 +36,6 @@
     "@react-native-harness/cli": "workspace:*",
     "@react-native-harness/metro": "workspace:*",
     "@react-native-harness/babel-preset": "workspace:*"
-  }
+  },
+  "license": "MIT"
 }

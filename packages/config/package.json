@@ -18,5 +18,6 @@
     "tslib": "^2.3.0",
     "zod": "^3.25.67",
     "@react-native-harness/reporters": "workspace:*"
-  }
+  },
+  "license": "MIT"
 }

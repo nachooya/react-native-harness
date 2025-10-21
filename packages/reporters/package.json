@@ -9,5 +9,6 @@
   },
   "devDependencies": {
     "@react-native-harness/bridge": "workspace:*"
-  }
+  },
+  "license": "MIT"
 }
