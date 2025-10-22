@@ -1,3 +1,15 @@
+## [1.0.0-alpha.17] (2025-10-22)
+
+### Features
+
+- **Metro Regression Workaround** ([#21](https://github.com/callstackincubator/react-native-harness/pull/21)): Changed the way config is augmented to return an async function, working around a regression in Metro.
+
+- **Migration Prompts** ([#19](https://github.com/callstackincubator/react-native-harness/pull/19)): Added migration guide to help users transition from the old CLI to the new Jest-based workflow. Users with unsupported configuration properties will be prompted to migrate.
+
+### Bug Fixes
+
+- **Bundle URL Fix** ([#20](https://github.com/callstackincubator/react-native-harness/pull/20)): Fixed incorrect URL with double slashes used during test bundling, which was causing failures due to changed behavior in React Native or Metro.
+
 ## [1.0.0-alpha.16] (2025-10-22)
 
 ### Features
