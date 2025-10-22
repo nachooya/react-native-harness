@@ -8,10 +8,9 @@ const getModuleUrl = (fileName: string): string => {
   const urlSearchParams = new URLSearchParams({
     modulesOnly: 'true',
     platform: Platform.OS,
-    'resolver.isHarness': 'true',
   });
 
-  return `${devServerUrl}/${bundleName}?${urlSearchParams.toString()}`;
+  return `${devServerUrl}${bundleName}?${urlSearchParams.toString()}`;
 };
 
 export const fetchModule = async (fileName: string): Promise<string> => {
