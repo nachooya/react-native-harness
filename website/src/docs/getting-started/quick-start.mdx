@@ -4,6 +4,12 @@ import { PackageManagerTabs } from '@theme';
 
 React Native Harness allows you to write Jest-style tests that run directly in your React Native app with full access to native modules. Let's get you set up in minutes.
 
+## Prerequisites
+
+React Native Harness provides a dedicated `react-native-harness` command that wraps the Jest CLI under the hood, giving you all the powerful features of Jest including watch mode, code coverage, filtering, and more. This means you get the full Jest experience with seamless integration for running tests in real native environments.
+
+Make sure you have Jest installed in your project. Most React Native projects come with Jest by default, so you should be all set! If Jest isn't installed yet, check out the [Jest Getting Started guide](https://jestjs.io/docs/getting-started) to get it up and running.
+
 ## Installation
 
 Install React Native Harness as a development dependency:
@@ -20,7 +26,6 @@ Create a `rn-harness.config.mjs` file in your project root:
 const config = {
   entryPoint: './index.js',
   appRegistryComponentName: 'YourAppName',
-  include: ['./src/**/*.harness.{js,ts,jsx,tsx}'],
 
   runners: [
     {
@@ -62,6 +67,43 @@ const customConfig = {
 
 module.exports = withRnHarness(mergeConfig(defaultConfig, customConfig));
 ```
+
+:::tip Safe for Production
+The `withRnHarness` function is a noop when you're not running Harness tests, so you don't need to worry about it affecting your app in production. It only kicks in when running tests!
+:::
+
+### 3. Configure Jest
+
+Update your `jest.config.js` to use the React Native Harness preset:
+
+```javascript
+module.exports = {
+  preset: 'react-native-harness',
+};
+```
+
+:::tip Running Both Classic and Harness Tests
+If you want to run both traditional Jest tests and Harness tests in the same app, you can use Jest's `projects` feature. This lets you separate your regular unit tests from your in-app Harness tests:
+
+```javascript
+module.exports = {
+  projects: [
+    // Classic Jest tests
+    {
+      preset: 'react-native',
+      testMatch: ['**/__tests__/**/*.test.{js,ts,tsx}'],
+    },
+    // Harness tests
+    {
+      preset: 'react-native-harness',
+      testMatch: ['**/__tests__/**/*.harness.{js,ts,tsx}'],
+    },
+  ],
+};
+```
+
+This way, you can keep your fast unit tests alongside your comprehensive in-app integration tests, and Jest will run them all together!
+:::
 
 ## Writing Your First Test
 
@@ -165,11 +207,22 @@ Follow your framework's documentation to build and install the debug variant:
 
 ## Running Tests
 
-Use the React Native Harness CLI to run your tests:
+Now you're ready to run your tests! Use the `react-native-harness` command with the `--harnessRunner` flag to specify which platform to run on:
 
-<PackageManagerTabs command="react-native-harness test android" />
+<PackageManagerTabs command="react-native-harness --harnessRunner android" />
 
-<PackageManagerTabs command="react-native-harness test ios" />
+<PackageManagerTabs command="react-native-harness --harnessRunner ios" />
+
+:::tip Default Runner
+If you don't provide the `--harnessRunner` flag, React Native Harness will use the runner specified in the `defaultRunner` property of your `rn-harness.config.mjs` file. If no `defaultRunner` is configured, you must explicitly provide the `--harnessRunner` flag.
+:::
+
+Since the `react-native-harness` command wraps Jest CLI under the hood, you get all the powerful Jest CLI features out of the box:
+
+- **Watch mode**: `react-native-harness --watch --harnessRunner android` to automatically rerun tests when files change
+- **Code coverage**: `react-native-harness --coverage --harnessRunner android` to see how much of your code is tested
+- **Run specific tests**: `react-native-harness MyComponent.harness --harnessRunner android` to run only certain test files
+- **Filter by name**: `react-native-harness --testNamePattern="specific test" --harnessRunner android` to run tests matching a pattern
 
 ## What's Next?
 

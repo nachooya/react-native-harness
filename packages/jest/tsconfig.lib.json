@@ -7,18 +7,19 @@
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
     "emitDeclarationOnly": false,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    "types": ["node"],
+    "lib": ["DOM"]
   },
   "include": ["src/**/*.ts"],
   "references": [
+    {
+      "path": "../cli/tsconfig.lib.json"
+    },
     {
       "path": "../config/tsconfig.lib.json"
     },
     {
       "path": "../bridge/tsconfig.lib.json"
-    },
-    {
-      "path": "../cli/tsconfig.lib.json"
     }
   ]
 }
