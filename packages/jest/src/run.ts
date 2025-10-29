@@ -5,7 +5,7 @@ import type {
   TestSuiteResult as HarnessTestSuiteResult,
   TestResult as HarnessTestResult,
 } from '@react-native-harness/bridge';
-import type { Harness } from '@react-native-harness/cli/external';
+import type { Harness } from './harness.js';
 import { formatResultsErrors } from 'jest-message-util';
 import { toTestResult } from './toTestResult.js';
 
@@ -84,8 +84,7 @@ export const runHarnessTestFile: RunHarnessTestFile = async ({
     (setupFile) => path.relative(globalConfig.rootDir, setupFile)
   );
 
-  const client = harness.bridge.rpc.clients.at(-1)!;
-  const results = await client.runTests(relativeTestPath, {
+  const results = await harness.runTests(relativeTestPath, {
     testNamePattern: globalConfig.testNamePattern,
     setupFiles,
     setupFilesAfterEnv,

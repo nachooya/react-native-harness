@@ -7,6 +7,15 @@
       "path": "../cli"
     },
     {
+      "path": "../bundler-metro"
+    },
+    {
+      "path": "../tools"
+    },
+    {
+      "path": "../platforms"
+    },
+    {
       "path": "../config"
     },
     {

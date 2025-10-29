@@ -35,6 +35,21 @@
     },
     {
       "path": "./packages/jest"
+    },
+    {
+      "path": "./packages/platform-android"
+    },
+    {
+      "path": "./packages/platforms"
+    },
+    {
+      "path": "./packages/platform-ios"
+    },
+    {
+      "path": "./packages/platform-vega"
+    },
+    {
+      "path": "./packages/bundler-metro"
     }
   ]
 }

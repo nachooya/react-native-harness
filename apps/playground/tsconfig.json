@@ -4,6 +4,15 @@
   "include": [],
   "references": [
     {
+      "path": "../../packages/platform-vega"
+    },
+    {
+      "path": "../../packages/platform-ios"
+    },
+    {
+      "path": "../../packages/platform-android"
+    },
+    {
       "path": "../../packages/jest"
     },
     {
