@@ -1,0 +1,13 @@
+name: 'React Native Harness'
+description: 'Run React Native Harness tests in a GitHub Actions workflow'
+
+inputs:
+  runner:
+    description: 'The runner to use'
+    required: true
+    type: string
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'Read Harness config'

@@ -1,4 +1,4 @@
-import { spawn } from '@react-native-harness/tools';
+import { spawn, wait } from '@react-native-harness/tools';
 
 export const isAppInstalled = async (
   adbId: string,
@@ -66,14 +66,18 @@ export const getShellProperty = async (
   adbId: string,
   property: string
 ): Promise<string | null> => {
-  const { stdout } = await spawn('adb', [
-    '-s',
-    adbId,
-    'shell',
-    'getprop',
-    property,
-  ]);
-  return stdout.trim() || null;
+  try {
+    const { stdout } = await spawn('adb', [
+      '-s',
+      adbId,
+      'shell',
+      'getprop',
+      property,
+    ]);
+    return stdout.trim() || null;
+  } catch {
+    return null;
+  }
 };
 
 export type DeviceInfo = {
@@ -96,4 +100,23 @@ export const isBootCompleted = async (adbId: string): Promise<boolean> => {
 
 export const stopEmulator = async (adbId: string): Promise<void> => {
   await spawn('adb', ['-s', adbId, 'emu', 'kill']);
+};
+
+export const waitForBootCompleted = async (
+  adbId: string,
+  timeout = 10000
+): Promise<void> => {
+  const startTime = Date.now();
+
+  while (startTime + timeout > Date.now()) {
+    const bootCompleted = await isBootCompleted(adbId);
+
+    if (bootCompleted) {
+      return;
+    }
+
+    await wait(1000);
+  }
+
+  throw new Error('Timeout reached while waiting for boot to complete');
 };

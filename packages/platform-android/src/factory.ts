@@ -8,14 +8,21 @@ import {
   type AndroidEmulator,
   type AndroidPlatformConfig,
   type PhysicalAndroidDevice,
+  type AndroidEmulatorHardwareProfile,
+  isAndroidDeviceEmulator,
 } from './config.js';
 import { getAdbId } from './adb-id.js';
 import * as adb from './adb.js';
 import { getDeviceName } from './utils.js';
+import { getAndroidEmulatorPlatformVariant } from './variants/android-emulator.js';
 
-export const androidEmulator = (name: string): AndroidEmulator => ({
+export const androidEmulator = (
+  name: string,
+  hardwareProfile: AndroidEmulatorHardwareProfile
+): AndroidEmulator => ({
   type: 'emulator',
   name,
+  hardwareProfile,
 });
 
 export const physicalAndroidDevice = (
@@ -33,6 +40,11 @@ export const androidPlatform = (
   name: config.name,
   getInstance: async () => {
     const parsedConfig = AndroidPlatformConfigSchema.parse(config);
+
+    if (isAndroidDeviceEmulator(parsedConfig.device)) {
+      return await getAndroidEmulatorPlatformVariant(parsedConfig);
+    }
+
     const adbId = await getAdbId(parsedConfig.device);
 
     if (!adbId) {

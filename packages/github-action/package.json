@@ -1,0 +1,10 @@
+{
+  "name": "@react-native-harness/ci-github-action",
+  "private": true,
+  "description": "GitHub Action for React Native Harness",
+  "version": "1.0.0-alpha.17",
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "license": "MIT"
+}

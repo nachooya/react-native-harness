@@ -20,13 +20,18 @@ const config = {
   runners: [
     androidPlatform({
       name: 'android',
-      device: androidEmulator('Pixel_8_API_35'),
+      device: androidEmulator('Pixel_8_API_35', {
+        type: 'existing',
+        name: 'pixel_7',
+      }),
       bundleId: 'com.playground',
+      activityName: '.MainActivity',
     }),
     androidPlatform({
       name: 'moto-g72',
       device: physicalAndroidDevice('Motorola', 'Moto G72'),
       bundleId: 'com.playground',
+      activityName: '.MainActivity',
     }),
     applePlatform({
       name: 'iphone-16-pro',
