@@ -247,6 +247,7 @@ jobs:
           xcrun simctl install booted ./apps/${{ matrix.app }}/ios/build/Build/Products/Debug-iphonesimulator/Playground.app
 
       - name: Run E2E tests
+        timeout-minutes: 5
         run: |
           HARNESS_DEBUG=true pnpm nx run @react-native-harness/${{ matrix.app }}:start --args="--harnessRunner ios"
 

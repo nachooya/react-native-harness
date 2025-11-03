@@ -56,13 +56,16 @@ export const getAppleSimulatorPlatformInstance = async (
     },
     restartApp: async () => {
       // The start app method will terminate the running process if it is running.
+      console.log('start app');
       await simctl.startApp(udid, config.bundleId);
+      console.log('after start app');
     },
     stopApp: async () => {
       await simctl.stopApp(udid, config.bundleId);
     },
     dispose: async () => {
-      await simctl.stopApp(udid, config.bundleId);
+      console.log('dispose');
+      // await simctl.stopApp(udid, config.bundleId);
     },
   };
 };
