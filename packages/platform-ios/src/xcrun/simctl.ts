@@ -98,7 +98,13 @@ export const startApp = async (
   udid: string,
   bundleId: string
 ): Promise<void> => {
-  await spawn('xcrun', ['simctl', 'launch', udid, bundleId]);
+  await spawn('xcrun', [
+    'simctl',
+    'launch',
+    '--terminate-running-process',
+    udid,
+    bundleId,
+  ]);
 };
 
 export const stopApp = async (

@@ -55,7 +55,7 @@ export const getAppleSimulatorPlatformInstance = async (
       await simctl.startApp(udid, config.bundleId);
     },
     restartApp: async () => {
-      await simctl.stopApp(udid, config.bundleId);
+      // The start app method will terminate the running process if it is running.
       await simctl.startApp(udid, config.bundleId);
     },
     stopApp: async () => {
