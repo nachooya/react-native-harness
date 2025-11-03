@@ -1,3 +1,17 @@
+## [1.0.0-alpha.18] (2025-11-03)
+
+### Features
+
+- **Metro Caching** ([#23](https://github.com/callstackincubator/react-native-harness/pull/23)): Added support for Metro's transformation cache, helping in cases when Metro struggles with re-transforming the same files over and over.
+
+- **Improved Timeout Handling** ([#24](https://github.com/callstackincubator/react-native-harness/pull/24)): Enhanced timeout handling to propagate timeouts not only to the initial bootstrapping process but also to all commands sent to the device.
+
+- **Platform Architecture Refactor** ([#22](https://github.com/callstackincubator/react-native-harness/pull/22)): Introduced a major refactor of the Harness architecture, splitting the CLI package into several smaller packages. This makes it possible to create custom platform packages without modifying existing ones. The Metro integration has also been revamped to be more reliable in CI environments.
+
+### Documentation
+
+- **GitHub Actions Workflow Update** ([#25](https://github.com/callstackincubator/react-native-harness/pull/25)): Updated the example GitHub Actions workflow for iOS by adding a step to install Watchman, which dramatically speeds up the file-crawling process and makes Harness run much faster.
+
 ## [1.0.0-alpha.17] (2025-10-22)
 
 ### Features
