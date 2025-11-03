@@ -12,57 +12,54 @@ import {
   MetroBundlerNotReadyError,
 } from './errors.js';
 import { METRO_PORT } from './constants.js';
-import type { MetroInstance } from './types.js';
+import type { MetroEvents, MetroInstance } from './types.js';
 import assert from 'node:assert';
 import { createRequire } from 'node:module';
-
-const INITIALIZATION_DONE_EVENT_TYPE = 'initialize_done';
+import { EventEmitter, getEmitter } from './emitter.js';
 
 const require = createRequire(import.meta.url);
 
+const getMetroEventsEmitter = (
+  metro: ChildProcess
+): EventEmitter<MetroEvents> => {
+  const emitter = getEmitter<MetroEvents>();
+  const customPipe = metro.stdio[3];
+  assert(customPipe, 'customPipe is required');
+
+  customPipe.on('data', (data) => {
+    const text = data.toString().split('\n');
+
+    for (const line of text) {
+      if (line.trim() === '') {
+        continue;
+      }
+
+      try {
+        const event = JSON.parse(line);
+        emitter.emit(event);
+      } catch (error) {
+        logger.error('Failed to parse event', error);
+      }
+    }
+  });
+
+  return emitter;
+};
+
 const waitForReady = (
-  metroProcess: ChildProcess,
+  emitter: EventEmitter<MetroEvents>,
   timeoutMs = 60000
 ): Promise<void> => {
   return new Promise<void>((resolve, reject) => {
-    const customPipe = metroProcess.stdio[3];
-    assert(customPipe, 'customPipe is required');
-
-    // eslint-disable-next-line prefer-const
-    let pipeListener: (data: Buffer) => void;
-    // eslint-disable-next-line prefer-const
-    let timer: NodeJS.Timeout;
-
-    const cleanup = () => {
-      clearTimeout(timer);
-      customPipe.off('data', pipeListener);
-    };
-
-    pipeListener = (data) => {
-      const text = data.toString().split('\n');
-
-      for (const line of text) {
-        if (line.trim() === '') {
-          continue;
-        }
-
-        try {
-          const event = JSON.parse(line);
-
-          if (event.type === INITIALIZATION_DONE_EVENT_TYPE) {
-            cleanup();
-            resolve();
-          }
-        } catch (error) {
-          logger.error('Failed to parse event', error);
-        }
+    const listener = (event: MetroEvents) => {
+      if (event.type === 'initialize_done') {
+        resolve();
       }
     };
+    emitter.addListener(listener);
 
-    customPipe.on('data', pipeListener);
-
-    timer = setTimeout(() => {
-      cleanup();
+    setTimeout(() => {
+      emitter.removeListener(listener);
       reject(new MetroBundlerNotReadyError(timeoutMs));
     }, timeoutMs);
   });
@@ -98,18 +95,10 @@ export const getMetroInstance = async (
   }
 
   const childProcess = await metro.nodeChildProcess;
+  const eventsEmitter = getMetroEventsEmitter(childProcess);
 
-  // Forward metro output to logger
-  if (childProcess.stdout) {
-    childProcess.stdout.on('data', (data) => {
-      logger.debug(data.toString().trim());
-    });
-  }
-  if (childProcess.stderr) {
-    childProcess.stderr.on('data', (data) => {
-      logger.debug(data.toString().trim());
-    });
-  }
+  // Forward events to logger
+  eventsEmitter.addListener((event) => logger.debug(JSON.stringify(event)));
 
   metro.catch((error) => {
     // This process is going to be killed by us, so we don't need to throw an error
@@ -121,9 +110,10 @@ export const getMetroInstance = async (
   });
 
   // Wait for Metro to be ready by monitoring stdout for "Dev server ready."
-  await waitForReady(childProcess);
+  await waitForReady(eventsEmitter);
 
   return {
+    events: eventsEmitter,
     dispose: async () => {
       const isKilled = childProcess.kill('SIGTERM');
 

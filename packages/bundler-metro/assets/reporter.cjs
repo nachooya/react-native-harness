@@ -8,6 +8,10 @@ class HarnessReporter {
     this._stream = fs.createWriteStream('', { fd: 3 });
   }
   update(event) {
+    if (event.type === 'bundle_transform_progressed') {
+      return;
+    }
+
     if (event.error instanceof Error) {
       const { message, stack } = event.error;
       event = Object.assign(event, {
@@ -16,7 +20,7 @@ class HarnessReporter {
         stack,
       });
     }
-    process.stdout.write(JSON.stringify(event) + '\n');
+
     this._stream.write(JSON.stringify(event) + '\n');
   }
 }
