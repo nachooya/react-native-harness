@@ -92,14 +92,18 @@ export const getApplePhysicalDevicePlatformInstance = async (
       await devicectl.startApp(deviceId, config.bundleId);
     },
     restartApp: async () => {
+      console.log('restart app');
       await devicectl.stopApp(deviceId, config.bundleId);
+      console.log('after stop');
       await devicectl.startApp(deviceId, config.bundleId);
+      console.log('after start');
     },
     stopApp: async () => {
-      await devicectl.stopApp(deviceId, config.bundleId);
+      // await devicectl.stopApp(deviceId, config.bundleId);
     },
     dispose: async () => {
-      await devicectl.stopApp(deviceId, config.bundleId);
+      console.log('dispose');
+      // await devicectl.stopApp(deviceId, config.bundleId);
     },
   };
 };
