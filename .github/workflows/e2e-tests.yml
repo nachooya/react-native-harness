@@ -234,6 +234,10 @@ jobs:
           path: ./apps/${{ matrix.app }}/ios/build/Build/Products/Debug-iphonesimulator/Playground.app
           key: ios-app-${{ matrix.app }}
 
+      - name: Update linker cache
+        run: |
+          xcrun simctl runtime dyld_shared_cache update --all
+
       - uses: futureware-tech/simulator-action@v4
         with:
           model: 'iPhone 16 Pro'
