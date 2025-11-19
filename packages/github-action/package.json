@@ -1,0 +1,20 @@
+{
+  "name": "@react-native-harness/github-action",
+  "private": true,
+  "description": "GitHub Actions for React Native Harness",
+  "version": "1.0.0-alpha.18",
+  "type": "commonjs",
+  "exports": {
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@react-native-harness/config": "workspace:*"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1"
+  },
+  "license": "MIT"
+}
