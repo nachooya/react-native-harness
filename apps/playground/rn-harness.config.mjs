@@ -14,19 +14,19 @@ import {
 } from '@react-native-harness/platform-vega';
 
 const config = {
-  entryPoint: './src/main.tsx',
-  appRegistryComponentName: 'Playground',
+  entryPoint: './index.js',
+  appRegistryComponentName: 'HarnessPlayground',
 
   runners: [
     androidPlatform({
       name: 'android',
       device: androidEmulator('Pixel_8_API_35'),
-      bundleId: 'com.playground',
+      bundleId: 'com.harnessplayground',
     }),
     androidPlatform({
       name: 'moto-g72',
       device: physicalAndroidDevice('Motorola', 'Moto G72'),
-      bundleId: 'com.playground',
+      bundleId: 'com.harnessplayground',
     }),
     applePlatform({
       name: 'iphone-16-pro',
@@ -36,7 +36,7 @@ const config = {
     applePlatform({
       name: 'ios',
       device: appleSimulator('iPhone 16 Pro', '18.6'),
-      bundleId: 'org.reactjs.native.example.Playground',
+      bundleId: 'com.harnessplayground',
     }),
     vegaPlatform({
       name: 'vega',
