@@ -10,6 +10,8 @@ import type {
 } from './shared.js';
 import { deserialize, serialize } from './serializer.js';
 import { DeviceNotRespondingError } from './errors.js';
+import { createPlatformBridgeFunctions } from './platform-bridge.js';
+import type { HarnessPlatformRunner } from '@react-native-harness/platforms';
 
 export type BridgeServerOptions = {
   port: number;
@@ -36,6 +38,7 @@ export type BridgeServer = {
     event: T,
     listener: BridgeServerEvents[T]
   ) => void;
+  updatePlatformFunctions: (platformRunner: HarnessPlatformRunner) => void;
   dispose: () => void;
 };
 
@@ -51,15 +54,35 @@ export const getBridgeServer = async ({
   const emitter = new EventEmitter();
   const clients = new Set<WebSocket>();
 
+  const baseFunctions: BridgeServerFunctions = {
+    reportReady: (device) => {
+      emitter.emit('ready', device);
+    },
+    emitEvent: (_, data) => {
+      emitter.emit('event', data);
+    },
+    'platform.actions.tap': async () => {
+      throw new Error('Platform functions not initialized');
+    },
+    'platform.actions.inputText': async () => {
+      throw new Error('Platform functions not initialized');
+    },
+    'platform.actions.tapElement': async () => {
+      throw new Error('Platform functions not initialized');
+    },
+    'platform.queries.getUiHierarchy': async () => {
+      throw new Error('Platform functions not initialized');
+    },
+    'platform.queries.findByTestId': async () => {
+      throw new Error('Platform functions not initialized');
+    },
+    'platform.queries.findAllByTestId': async () => {
+      throw new Error('Platform functions not initialized');
+    },
+  };
+
   const group = createBirpcGroup<BridgeClientFunctions, BridgeServerFunctions>(
-    {
-      reportReady: (device) => {
-        emitter.emit('ready', device);
-      },
-      emitEvent: (_, data) => {
-        emitter.emit('event', data);
-      },
-    } satisfies BridgeServerFunctions,
+    baseFunctions,
     [],
     {
       timeout,
@@ -68,6 +91,13 @@ export const getBridgeServer = async ({
       },
     }
   );
+
+  const updatePlatformFunctions = (
+    platformRunner: HarnessPlatformRunner
+  ): void => {
+    const platformFunctions = createPlatformBridgeFunctions(platformRunner);
+    Object.assign(baseFunctions, platformFunctions);
+  };
 
   wss.on('connection', (ws: WebSocket) => {
     logger.debug('Client connected to the bridge');
@@ -104,6 +134,7 @@ export const getBridgeServer = async ({
     on: emitter.on.bind(emitter),
     once: emitter.once.bind(emitter),
     off: emitter.off.bind(emitter),
+    updatePlatformFunctions,
     dispose,
   };
 };

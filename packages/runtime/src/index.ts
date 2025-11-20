@@ -8,3 +8,6 @@ export * from './mocker/index.js';
 export * from './namespace.js';
 export * from './waitFor.js';
 export * from './render/index.js';
+export { userEvent } from './userEvent/index.js';
+export type { ElementReference } from '@react-native-harness/bridge';
+export { screen } from './screen/index.js';

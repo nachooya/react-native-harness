@@ -64,6 +64,28 @@ export const getAppleSimulatorPlatformInstance = async (
     dispose: async () => {
       await simctl.stopApp(udid, config.bundleId);
     },
+    queries: {
+      getUiHierarchy: async () => {
+        throw new Error('Not implemented yet');
+      },
+      findByTestId: async () => {
+        throw new Error('Not implemented yet');
+      },
+      findAllByTestId: async () => {
+        throw new Error('Not implemented yet');
+      },
+    },
+    actions: {
+      tap: async () => {
+        throw new Error('Not implemented yet');
+      },
+      inputText: async () => {
+        throw new Error('Not implemented yet');
+      },
+      tapElement: async () => {
+        throw new Error('Not implemented yet');
+      },
+    },
   };
 };
 
@@ -100,6 +122,28 @@ export const getApplePhysicalDevicePlatformInstance = async (
     },
     dispose: async () => {
       await devicectl.stopApp(deviceId, config.bundleId);
+    },
+    queries: {
+      getUiHierarchy: async () => {
+        throw new Error('Not implemented yet');
+      },
+      findByTestId: async () => {
+        throw new Error('Not implemented yet');
+      },
+      findAllByTestId: async () => {
+        throw new Error('Not implemented yet');
+      },
+    },
+    actions: {
+      tap: async () => {
+        throw new Error('Not implemented yet');
+      },
+      inputText: async () => {
+        throw new Error('Not implemented yet');
+      },
+      tapElement: async () => {
+        throw new Error('Not implemented yet');
+      },
     },
   };
 };

@@ -29,6 +29,9 @@ const getHarnessInternal = async (
     }),
   ]);
 
+  // Wire up platform functions to bridge
+  serverBridge.updatePlatformFunctions(platformInstance);
+
   const dispose = async () => {
     await Promise.all([
       serverBridge.dispose(),

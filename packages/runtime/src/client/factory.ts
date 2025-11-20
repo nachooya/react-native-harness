@@ -14,6 +14,7 @@ import { getBundler, evaluateModule, Bundler } from '../bundler/index.js';
 import { markTestsAsSkippedByName } from '../filtering/index.js';
 import { setup } from '../render/setup.js';
 import { runSetupFiles } from './setup-files.js';
+import { setClient } from './store.js';
 
 export const getClient = async () => {
   const client = await getBridgeClient(getWSServer(), {
@@ -21,6 +22,9 @@ export const getClient = async () => {
       throw new Error('Not implemented');
     },
   });
+
+  // Store client instance for use by screen and userEvent APIs
+  setClient(client);
 
   client.rpc.$functions.runTests = async (
     path: string,

@@ -97,3 +97,39 @@ export const isBootCompleted = async (adbId: string): Promise<boolean> => {
 export const stopEmulator = async (adbId: string): Promise<void> => {
   await spawn('adb', ['-s', adbId, 'emu', 'kill']);
 };
+
+export const getUiHierarchy = async (adbId: string): Promise<string> => {
+  const dumpPath = '/data/local/tmp/uidump.xml';
+  await spawn('adb', ['-s', adbId, 'shell', 'uiautomator', 'dump', dumpPath]);
+  const { stdout } = await spawn('adb', [
+    '-s',
+    adbId,
+    'shell',
+    'cat',
+    dumpPath,
+  ]);
+  await spawn('adb', ['-s', adbId, 'shell', 'rm', dumpPath]);
+  return stdout;
+};
+
+export const tap = async (
+  adbId: string,
+  x: number,
+  y: number
+): Promise<void> => {
+  await spawn('adb', [
+    '-s',
+    adbId,
+    'shell',
+    'input',
+    'tap',
+    x.toString(),
+    y.toString(),
+  ]);
+};
+
+export const inputText = async (adbId: string, text: string): Promise<void> => {
+  // ADB input text requires spaces to be escaped as %s
+  const escapedText = text.replace(/ /g, '%s');
+  await spawn('adb', ['-s', adbId, 'shell', 'input', 'text', escapedText]);
+};

@@ -4,6 +4,15 @@ import type {
 } from './shared/test-runner.js';
 import type { TestCollectorEvents } from './shared/test-collector.js';
 import type { BundlerEvents } from './shared/bundler.js';
+import type {
+  UIElement,
+  ElementReference,
+} from '@react-native-harness/platforms';
+
+export type {
+  UIElement,
+  ElementReference,
+} from '@react-native-harness/platforms';
 
 export type {
   TestCollectorEvents,
@@ -75,4 +84,14 @@ export type BridgeServerFunctions = {
     event: TEvent['type'],
     data: TEvent
   ) => void;
+  'platform.actions.tap': (x: number, y: number) => Promise<void>;
+  'platform.actions.inputText': (text: string) => Promise<void>;
+  'platform.actions.tapElement': (element: ElementReference) => Promise<void>;
+  'platform.queries.getUiHierarchy': () => Promise<UIElement>;
+  'platform.queries.findByTestId': (
+    testId: string
+  ) => Promise<ElementReference>;
+  'platform.queries.findAllByTestId': (
+    testId: string
+  ) => Promise<ElementReference[]>;
 };

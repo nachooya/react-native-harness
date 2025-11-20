@@ -38,6 +38,28 @@ const getVegaRunner = async (
     dispose: async () => {
       await kepler.stopApp(deviceId, bundleId);
     },
+    queries: {
+      getUiHierarchy: async () => {
+        throw new Error('Not implemented yet');
+      },
+      findByTestId: async () => {
+        throw new Error('Not implemented yet');
+      },
+      findAllByTestId: async () => {
+        throw new Error('Not implemented yet');
+      },
+    },
+    actions: {
+      tap: async () => {
+        throw new Error('Not implemented yet');
+      },
+      inputText: async () => {
+        throw new Error('Not implemented yet');
+      },
+      tapElement: async () => {
+        throw new Error('Not implemented yet');
+      },
+    },
   };
 };
 
