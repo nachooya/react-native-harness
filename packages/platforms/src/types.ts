@@ -11,6 +11,7 @@ export type PlatformActions = {
   tap: (x: number, y: number) => Promise<void>;
   inputText: (text: string) => Promise<void>;
   tapElement: (element: ElementReference) => Promise<void>;
+  screenshot: () => Promise<FileReference>;
 };
 
 export type PlatformQueries = {
@@ -36,4 +37,8 @@ export type HarnessPlatform<TConfig = Record<string, unknown>> = {
 
 export type ElementReference = {
   id: string;
+};
+
+export type FileReference = {
+  path: string;
 };

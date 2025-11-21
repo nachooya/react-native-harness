@@ -17,6 +17,9 @@ import {
   findAllByTestId,
   getElementByPath,
 } from './utils.js';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { randomUUID } from 'node:crypto';
 
 const getAndroidRunner = async (
   config: AndroidPlatformConfig
@@ -105,6 +108,14 @@ const getAndroidRunner = async (
 
         // Tap at center
         await adb.tap(adbId, centerX, centerY);
+      },
+      screenshot: async () => {
+        const tempPath = join(
+          tmpdir(),
+          `harness-screenshot-${randomUUID()}.png`
+        );
+        await adb.screenshot(adbId, tempPath);
+        return { path: tempPath };
       },
     },
   };

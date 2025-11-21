@@ -7,11 +7,16 @@ import type {
   BridgeClientFunctions,
   DeviceDescriptor,
   BridgeEvents,
+  ImageSnapshotOptions,
 } from './shared.js';
 import { deserialize, serialize } from './serializer.js';
 import { DeviceNotRespondingError } from './errors.js';
 import { createPlatformBridgeFunctions } from './platform-bridge.js';
-import type { HarnessPlatformRunner } from '@react-native-harness/platforms';
+import type {
+  FileReference,
+  HarnessPlatformRunner,
+} from '@react-native-harness/platforms';
+import { matchImageSnapshot } from './image-snapshot.js';
 
 export type BridgeServerOptions = {
   port: number;
@@ -78,6 +83,16 @@ export const getBridgeServer = async ({
     },
     'platform.queries.findAllByTestId': async () => {
       throw new Error('Platform functions not initialized');
+    },
+    'platform.actions.screenshot': async () => {
+      throw new Error('Platform functions not initialized');
+    },
+    'test.matchImageSnapshot': async (
+      screenshot: FileReference,
+      testPath: string,
+      options: ImageSnapshotOptions
+    ) => {
+      return await matchImageSnapshot(screenshot, testPath, options);
     },
   };
 

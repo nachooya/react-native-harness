@@ -11,6 +11,9 @@ import {
 import * as simctl from './xcrun/simctl.js';
 import * as devicectl from './xcrun/devicectl.js';
 import { getDeviceName } from './utils.js';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { randomUUID } from 'node:crypto';
 
 export const getAppleSimulatorPlatformInstance = async (
   config: ApplePlatformConfig
@@ -85,6 +88,14 @@ export const getAppleSimulatorPlatformInstance = async (
       tapElement: async () => {
         throw new Error('Not implemented yet');
       },
+      screenshot: async () => {
+        const tempPath = join(
+          tmpdir(),
+          `harness-screenshot-${randomUUID()}.png`
+        );
+        await simctl.screenshot(udid, tempPath);
+        return { path: tempPath };
+      },
     },
   };
 };
@@ -143,6 +154,9 @@ export const getApplePhysicalDevicePlatformInstance = async (
       },
       tapElement: async () => {
         throw new Error('Not implemented yet');
+      },
+      screenshot: async () => {
+        throw new Error('Screenshot is not supported on physical iOS devices');
       },
     },
   };

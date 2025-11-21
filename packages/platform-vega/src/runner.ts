@@ -59,6 +59,9 @@ const getVegaRunner = async (
       tapElement: async () => {
         throw new Error('Not implemented yet');
       },
+      screenshot: async () => {
+        throw new Error('Not implemented');
+      },
     },
   };
 };

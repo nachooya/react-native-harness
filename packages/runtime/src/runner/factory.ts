@@ -9,6 +9,8 @@ export const getTestRunner = (): TestRunner => {
   return {
     events,
     run: async (testSuite, testFilePath) => {
+      globalThis['HARNESS_TEST_PATH'] = testFilePath;
+
       const result = await runSuite(testSuite, {
         events,
         testFilePath,

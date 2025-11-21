@@ -120,3 +120,11 @@ export const getSimulatorId = async (
 
   return simulator?.udid ?? null;
 };
+
+export const screenshot = async (
+  udid: string,
+  destination: string
+): Promise<string> => {
+  await spawn('xcrun', ['simctl', 'io', udid, 'screenshot', destination]);
+  return destination;
+};

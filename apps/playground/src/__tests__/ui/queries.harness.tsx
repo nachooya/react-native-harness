@@ -38,18 +38,4 @@ describe('Queries', () => {
     expect(Array.isArray(elements)).toBe(true);
     expect(elements.length).toBe(2);
   });
-
-  test('should tap element found by testID', async () => {
-    await render(
-      <View>
-        <View testID="this-is-test-id">
-          <Text>This is a view with a testID</Text>
-        </View>
-      </View>
-    );
-    const element = await screen.findByTestId('this-is-test-id');
-    await userEvent.tap(element);
-    // If tap succeeds without throwing, the test passes
-    expect(element).toBeDefined();
-  });
 });

@@ -138,10 +138,9 @@ const findElementsByTestId = (
 
   // Check if this element matches the testID
   // In React Native, testID is typically stored in content-desc or as a testID attribute
-  const elementTestId =
-    element.attributes['testID'] ||
-    element.attributes['test-id'] ||
-    element.attributes['content-desc'];
+  const elementTestId = element.attributes['resource-id'];
+
+  console.log('elementTestId: ' + elementTestId + ', testId: ' + testId);
 
   if (elementTestId === testId) {
     results.push({ element, path });

@@ -30,10 +30,12 @@
     "@react-native-harness/platforms": "workspace:*",
     "@react-native-harness/tools": "workspace:*",
     "birpc": "^2.4.0",
+    "pngjs": "^7.0.0",
     "tslib": "^2.3.0",
     "ws": "^8.18.2"
   },
   "devDependencies": {
+    "@types/pngjs": "^6.0.5",
     "@types/ws": "^8.18.1"
   },
   "license": "MIT"

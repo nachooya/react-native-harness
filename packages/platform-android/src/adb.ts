@@ -133,3 +133,14 @@ export const inputText = async (adbId: string, text: string): Promise<void> => {
   const escapedText = text.replace(/ /g, '%s');
   await spawn('adb', ['-s', adbId, 'shell', 'input', 'text', escapedText]);
 };
+
+export const screenshot = async (
+  adbId: string,
+  destination: string
+): Promise<string> => {
+  const deviceTempPath = '/data/local/tmp/screenshot.png';
+  await spawn('adb', ['-s', adbId, 'shell', 'screencap', '-p', deviceTempPath]);
+  await spawn('adb', ['-s', adbId, 'pull', deviceTempPath, destination]);
+  await spawn('adb', ['-s', adbId, 'shell', 'rm', deviceTempPath]);
+  return destination;
+};

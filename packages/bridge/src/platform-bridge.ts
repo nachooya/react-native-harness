@@ -17,6 +17,9 @@ export const createPlatformBridgeFunctions = (
     'platform.actions.tapElement': async (element: ElementReference) => {
       await platformRunner.actions.tapElement(element);
     },
+    'platform.actions.screenshot': async () => {
+      return await platformRunner.actions.screenshot();
+    },
     'platform.queries.getUiHierarchy': async () => {
       return await platformRunner.queries.getUiHierarchy();
     },
