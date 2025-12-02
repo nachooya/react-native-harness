@@ -1,5 +1,9 @@
 import { getBridgeServer } from '@react-native-harness/bridge/server';
-import { BridgeClientFunctions } from '@react-native-harness/bridge';
+import {
+  HarnessContext,
+  TestExecutionOptions,
+  TestSuiteResult,
+} from '@react-native-harness/bridge';
 import { HarnessPlatform } from '@react-native-harness/platforms';
 import { getMetroInstance } from '@react-native-harness/bundler-metro';
 import { InitializationTimeoutError } from './errors.js';
@@ -8,8 +12,14 @@ import pRetry from 'p-retry';
 
 const BRIDGE_READY_TIMEOUT = 10000;
 
+export type HarnessRunTestsOptions = Exclude<TestExecutionOptions, 'platform'>;
+
 export type Harness = {
-  runTests: BridgeClientFunctions['runTests'];
+  context: HarnessContext;
+  runTests: (
+    path: string,
+    options: HarnessRunTestsOptions
+  ) => Promise<TestSuiteResult>;
   restart: () => Promise<void>;
   dispose: () => Promise<void>;
 };
@@ -20,12 +30,17 @@ const getHarnessInternal = async (
   projectRoot: string,
   signal: AbortSignal
 ): Promise<Harness> => {
+  const context: HarnessContext = {
+    platform,
+  };
+
   const [metroInstance, platformInstance, serverBridge] = await Promise.all([
     getMetroInstance({ projectRoot }, signal),
     import(platform.runner).then((module) => module.default(platform.config)),
     getBridgeServer({
       port: 3001,
       timeout: config.bridgeTimeout,
+      context,
     }),
   ]);
 
@@ -76,6 +91,7 @@ const getHarnessInternal = async (
     });
 
   return {
+    context,
     runTests: async (path, options) => {
       const client = serverBridge.rpc.clients.at(-1);
 
@@ -83,7 +99,10 @@ const getHarnessInternal = async (
         throw new Error('No client found');
       }
 
-      return await client.runTests(path, options);
+      return await client.runTests(path, {
+        ...options,
+        runner: platform.runner,
+      });
     },
     restart,
     dispose,

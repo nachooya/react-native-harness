@@ -28,7 +28,7 @@ export const getClient = async () => {
 
   client.rpc.$functions.runTests = async (
     path: string,
-    options: TestExecutionOptions = {}
+    options: TestExecutionOptions
   ) => {
     if (store.getState().status === 'running') {
       throw new Error('Already running tests');
@@ -88,7 +88,11 @@ export const getClient = async () => {
           )
         : collectionResult.testSuite;
 
-      const result = await runner.run(processedTestSuite, path);
+      const result = await runner.run({
+        testSuite: processedTestSuite,
+        testFilePath: path,
+        runner: options.runner,
+      });
       return result;
     } finally {
       collector?.dispose();

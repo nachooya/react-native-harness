@@ -4,7 +4,7 @@ import type {
   FileReference,
   ImageSnapshotOptions,
 } from '@react-native-harness/bridge';
-import { expect } from '../index.js';
+import { getHarnessContext } from '../../runner/index.js';
 
 declare module '@vitest/expect' {
   interface Matchers {
@@ -12,20 +12,18 @@ declare module '@vitest/expect' {
   }
 }
 
-expect.extend({
-  toMatchImageSnapshot,
-});
-
-async function toMatchImageSnapshot(
+export async function toMatchImageSnapshot(
   this: MatcherState,
   received: FileReference,
   options: ImageSnapshotOptions
 ): Promise<{ pass: boolean; message: () => string }> {
   const client = getClientInstance();
+  const context = getHarnessContext();
   const result = await client.rpc['test.matchImageSnapshot'](
     received,
-    globalThis['HARNESS_TEST_PATH'],
-    options
+    context.testFilePath,
+    options,
+    context.runner
   );
 
   return {

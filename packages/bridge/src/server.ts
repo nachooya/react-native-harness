@@ -8,6 +8,7 @@ import type {
   DeviceDescriptor,
   BridgeEvents,
   ImageSnapshotOptions,
+  HarnessContext,
 } from './shared.js';
 import { deserialize, serialize } from './serializer.js';
 import { DeviceNotRespondingError } from './errors.js';
@@ -21,6 +22,7 @@ import { matchImageSnapshot } from './image-snapshot.js';
 export type BridgeServerOptions = {
   port: number;
   timeout?: number;
+  context: HarnessContext;
 };
 
 export type BridgeServerEvents = {
@@ -50,6 +52,7 @@ export type BridgeServer = {
 export const getBridgeServer = async ({
   port,
   timeout,
+  context,
 }: BridgeServerOptions): Promise<BridgeServer> => {
   const wss = await new Promise<WebSocketServer>((resolve) => {
     const server = new WebSocketServer({ port, host: '0.0.0.0' }, () => {
@@ -92,7 +95,12 @@ export const getBridgeServer = async ({
       testPath: string,
       options: ImageSnapshotOptions
     ) => {
-      return await matchImageSnapshot(screenshot, testPath, options);
+      return await matchImageSnapshot(
+        screenshot,
+        testPath,
+        options,
+        context.platform.name
+      );
     },
   };
 
@@ -101,6 +109,10 @@ export const getBridgeServer = async ({
     [],
     {
       timeout,
+      onFunctionError: (error, functionName, args) => {
+        console.error('Function error', error, functionName, args);
+        throw error;
+      },
       onTimeoutError(functionName, args) {
         throw new DeviceNotRespondingError(functionName, args);
       },

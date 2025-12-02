@@ -1,8 +1,10 @@
-import pixelmatch, { type PixelmatchOptions } from 'pixelmatch';
+import pixelmatch from 'pixelmatch';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { PNG } from 'pngjs';
 import type { FileReference, ImageSnapshotOptions } from './shared.js';
+
+type PixelmatchOptions = Parameters<typeof pixelmatch>[5];
 
 const SNAPSHOT_DIR_NAME = '__image_snapshots__';
 const DEFAULT_OPTIONS_FOR_PIXELMATCH: PixelmatchOptions = {
@@ -18,8 +20,9 @@ const DEFAULT_OPTIONS_FOR_PIXELMATCH: PixelmatchOptions = {
 
 export const matchImageSnapshot = async (
   screenshot: FileReference,
-  testPath: string,
-  options: ImageSnapshotOptions
+  testFilePath: string,
+  options: ImageSnapshotOptions,
+  platformName: string
 ) => {
   const pixelmatchOptions = {
     ...DEFAULT_OPTIONS_FOR_PIXELMATCH,
@@ -36,8 +39,8 @@ export const matchImageSnapshot = async (
   const receivedBuffer = await fs.readFile(receivedPath);
 
   // Create __image_snapshots__ directory in same directory as test file
-  const testDir = path.dirname(testPath);
-  const snapshotsDir = path.join(testDir, SNAPSHOT_DIR_NAME);
+  const testDir = path.dirname(testFilePath);
+  const snapshotsDir = path.join(testDir, SNAPSHOT_DIR_NAME, platformName);
 
   const snapshotName = `${options.name}.png`;
   const snapshotPath = path.join(snapshotsDir, snapshotName);
@@ -63,6 +66,13 @@ export const matchImageSnapshot = async (
   const img2 = PNG.sync.read(snapshotBuffer);
   const { width, height } = img1;
   const diff = new PNG({ width, height });
+
+  if (img1.width !== img2.width || img1.height !== img2.height) {
+    return {
+      pass: false,
+      message: `Images have different dimensions. Received image width: ${img1.width}, height: ${img1.height}. Snapshot image width: ${img2.width}, height: ${img2.height}.`,
+    };
+  }
 
   // Compare buffers byte by byte
   const differences = pixelmatch(

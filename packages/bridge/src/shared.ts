@@ -8,6 +8,7 @@ import type {
   UIElement,
   ElementReference,
   FileReference,
+  HarnessPlatform,
 } from '@react-native-harness/platforms';
 
 export type {
@@ -105,12 +106,13 @@ export type TestExecutionOptions = {
   testNamePattern?: string;
   setupFiles?: string[];
   setupFilesAfterEnv?: string[];
+  runner: string;
 };
 
 export type BridgeClientFunctions = {
   runTests: (
     path: string,
-    options?: TestExecutionOptions
+    options: TestExecutionOptions
   ) => Promise<TestSuiteResult>;
 };
 
@@ -134,6 +136,11 @@ export type BridgeServerFunctions = {
   'test.matchImageSnapshot': (
     screenshot: FileReference,
     testPath: string,
-    options: ImageSnapshotOptions
+    options: ImageSnapshotOptions,
+    runner: string
   ) => Promise<{ pass: boolean; message: string }>;
+};
+
+export type HarnessContext = {
+  platform: HarnessPlatform;
 };
