@@ -12,6 +12,12 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
+    },
+    "./injector": {
+      "development": "./src/injector.ts",
+      "types": "./dist/injector.d.ts",
+      "import": "./dist/injector.js",
+      "default": "./dist/injector.js"
     }
   },
   "peerDependencies": {

@@ -6,6 +6,7 @@ import { getHarnessManifest } from './manifest';
 import { getHarnessBabelTransformerPath } from './babel-transformer';
 import { getHarnessCacheStores } from './metro-cache';
 import type { NotReadOnly } from './utils';
+import { getHarnessSerializer } from './getHarnessSerializer';
 
 const INTERNAL_CALLSITES_REGEX =
   /(^|[\\/])(node_modules[/\\]@react-native-harness)([\\/]|$)/;
@@ -31,6 +32,9 @@ export const withRnHarness = <T extends MetroConfig>(
     const harnessManifest = getHarnessManifest(harnessConfig);
     const harnessBabelTransformerPath =
       getHarnessBabelTransformerPath(metroConfig);
+    const harnessSerializer = getHarnessSerializer(
+      harnessConfig.unstable__skipAlreadyIncludedModules
+    );
 
     const patchedConfig: MetroConfig = {
       ...metroConfig,
@@ -53,6 +57,7 @@ export const withRnHarness = <T extends MetroConfig>(
 
           return INTERNAL_CALLSITES_REGEX.test(modulePath);
         },
+        customSerializer: harnessSerializer,
       },
       resolver: {
         ...metroConfig.resolver,
@@ -89,15 +94,6 @@ export const withRnHarness = <T extends MetroConfig>(
     if (harnessConfig.unstable__enableMetroCache) {
       (patchedConfig.cacheStores as NotReadOnly<MetroConfig['cacheStores']>) =
         getHarnessCacheStores();
-    }
-
-    if (harnessConfig.unstable__skipAlreadyIncludedModules) {
-      (
-        patchedConfig.serializer as NonNullable<
-          NotReadOnly<MetroConfig['serializer']>
-        >
-      ).customSerializer =
-        require('./getHarnessSerializer').getHarnessSerializer();
     }
 
     return patchedConfig as T;
