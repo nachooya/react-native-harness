@@ -1,3 +1,28 @@
+## 1.0.0-alpha.19 (2025-12-21)
+
+### 🩹 Fixes
+
+- ## Features ([](https://github.com/callstackincubator/react-native-harness/commit/))
+
+  - Add support for expo-dev-client
+    Enables development with Expo's development client for enhanced debugging capabilities
+  - Guard against augmenting the Metro config twice
+    Prevents duplicate Metro configuration modifications that could cause issues
+  - Run Metro internally
+    Integrates Metro bundler execution within the harness for better control
+
+  ## Fixes
+
+  - Add missing use-sync-external-store dependency
+    Fixes runtime errors by including required React hook dependency
+
+  ## Chores
+
+  - Reduce install size
+    Optimizes package dependencies to decrease installation footprint
+  - Add GitHub Actions for Harness
+    Sets up automated CI/CD workflows for the project
+
 ## [1.0.0-alpha.18] (2025-11-03)
 
 ### Features
