@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { getDeviceDescriptor } from './client/getDeviceDescriptor.js';
 import { getClient } from './client/index.js';
 import { setupJestMock } from './jest-mock.js';
@@ -21,7 +22,9 @@ const HMRClient =
 
 // Wait for HMRClient to be initialized
 setTimeout(() => {
-  HMRClient.disable();
+  if (Platform.OS !== 'web') {
+    HMRClient.disable();
+  }
 
   // Initialize the React Native Harness
   void getClient().then((client) =>
