@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { getDeviceDescriptor } from './client/getDeviceDescriptor.js';
 import { getClient } from './client/index.js';
 import { disableHMRWhenReady } from './disableHMRWhenReady.js';
@@ -22,7 +23,10 @@ const HMRClient =
 
 // Wait for HMRClient to be initialized
 setTimeout(() => {
-  void disableHMRWhenReady(() => HMRClient.disable(), 50).then(() =>
+  void disableHMRWhenReady(() => {
+    if (Platform.OS !== 'web') {
+      HMRClient.disable();
+  }}, 50).then(() =>
     getClient().then((client) =>
       client.rpc.reportReady(getDeviceDescriptor())
     )

@@ -1,6 +1,7 @@
 const { withNxMetro } = require('@nx/react-native');
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 const path = require('path');
+const fs = require('fs');
 
 const defaultConfig = getDefaultConfig(__dirname);
 
@@ -17,7 +18,32 @@ const customConfig = {
   cacheVersion: '@react-native-harness/playground',
   resolver: {
     unstable_enablePackageExports: true,
+
   },
+  server: {
+    ...(defaultConfig.server || {}),
+    enhanceMiddleware: (middleware, server) => {
+      return (req, res, next) => {
+        // Serve our HTML shell at / and /index.html
+        if (req.url === '/' || req.url === '/index.html') {
+          const htmlPath = path.join(projectRoot, 'web', 'index.html');
+
+          fs.readFile(htmlPath, 'utf8', (err, data) => {
+            if (err) {
+              res.writeHead(500, { 'Content-Type': 'text/plain' });
+              res.end('Error loading index.html: ' + err.message);
+              return;
+            }
+
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(data);
+          });
+          return;
+        }
+        return middleware(req, res, next);
+      };
+    },
+  }
 };
 
 module.exports = withNxMetro(mergeConfig(defaultConfig, customConfig), {
@@ -26,4 +52,30 @@ module.exports = withNxMetro(mergeConfig(defaultConfig, customConfig), {
     path.resolve(projectRoot, 'node_modules'),
     path.resolve(monorepoRoot, 'node_modules'),
   ],
+}).then((config) => {
+  const defaultResolveRequest = config.resolver.resolveRequest;
+  config.resolver.resolveRequest = (context, moduleName, platform) => {
+    if (platform === 'web') {
+
+      if (moduleName.includes('NativeSourceCode') ||
+        moduleName.includes('NativePlatformConstants') ||
+        moduleName.includes('NativeDevSettings') ||
+        moduleName.includes('NativeLogBox') ||
+        moduleName.includes('NativeRedBox')
+      ) {
+        return {
+          type: 'empty',
+        };
+      } else if (moduleName === 'react-native') {
+        return {
+          type: 'sourceFile',
+          filePath: require.resolve('react-native-web'),
+        };
+      }
+    }
+    // Everything else: default behavior
+    return defaultResolveRequest(context, moduleName, platform);
+  };
+
+  return config;
 });

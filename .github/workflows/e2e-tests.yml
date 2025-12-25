@@ -12,6 +12,7 @@ on:
           - all
           - android
           - ios
+          - web
   pull_request:
     types: [ready_for_review]
     branches:
@@ -189,3 +190,60 @@ jobs:
           app: ios/build/Build/Products/Debug-iphonesimulator/HarnessPlayground.app
           runner: ios
           projectRoot: apps/playground
+  
+  e2e-web:
+    name: E2E Web
+    runs-on: macos-latest
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'workflow_dispatch' && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'web')) }}
+
+    env:
+      HARNESS_DEBUG: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.10.0'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+
+      - name: Build packages
+        run: |
+          pnpm nx run-many -t build --projects="packages/*"
+
+      - name: Run React Native Harness (Safari)
+        uses: ./actions/web
+        with:
+          runner: web:safari
+          projectRoot: apps/playground 
+
+# Test: "waitFor › should use custom interval and timeout options",
+# is flacky on Chrome in GitHub CI runners
+#
+#      - name: Run React Native Harness (Chrome)
+#        uses: ./actions/web
+#        with:
+#          runner: web:chrome
+#          projectRoot: apps/playground
+
+# Test: "waitFor › should use custom interval and timeout options",
+# fails on Firefox in GitHub CI runners
+#
+#      - name: Run React Native Harness (Firefox)
+#        uses: ./actions/web
+#        with:
+#          runner: web:firefox
+#          projectRoot: apps/playground
+
+      
