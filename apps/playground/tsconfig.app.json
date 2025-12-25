@@ -34,6 +34,9 @@
   ],
   "references": [
     {
+      "path": "../../packages/platform-web/tsconfig.lib.json"
+    },
+    {
       "path": "../../packages/platform-vega/tsconfig.lib.json"
     },
     {
