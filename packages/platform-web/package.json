@@ -17,9 +17,10 @@
   },
   "dependencies": {
     "@react-native-harness/platforms": "workspace:*",
-    "zod": "^3.25.67",
+    "@wdio/logger": "^9.18.0",
     "tslib": "^2.3.0",
-    "webdriver": "^9.22.0"
+    "webdriver": "^9.22.0",
+    "zod": "^3.25.67"
   },
   "license": "MIT"
 }
