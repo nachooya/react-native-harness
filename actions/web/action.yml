@@ -1,0 +1,27 @@
+name: React Native Harness for Web
+description: Run React Native Harness tests on Web
+inputs:
+  runner:
+    description: The runner to use
+    required: true
+    type: string
+  projectRoot:
+    description: The project root directory
+    required: false
+    type: string
+runs:
+  using: 'composite'
+  steps:
+    - name: Load React Native Harness configuration
+      id: load-config
+      shell: bash
+      env:
+        INPUT_RUNNER: ${{ inputs.runner }}
+        INPUT_PROJECTROOT: ${{ inputs.projectRoot }}
+      run: |
+        node ${{ github.action_path }}/../shared/index.cjs
+    - name: Run E2E tests
+      shell: bash
+      working-directory: ${{ inputs.projectRoot }}
+      run: |
+        pnpm react-native-harness --harnessRunner ${{ inputs.runner }}
