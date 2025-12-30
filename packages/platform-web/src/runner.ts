@@ -18,15 +18,16 @@ const getWebRunner = async (
 
   const parsedConfig = WebPlatformConfigSchema.parse(config);
 
-  const capabilities: Record<string, string> = {
+  const capabilities: Record<string, any> = {
     browserName: parsedConfig.browserName,
   };
 
   const client = await WebDriver.newSession({
     path: '/',
+    logLevel: 'warn',
     capabilities,
-    logLevel: logLevel,
   });
+
   return {
     startApp: async () => {
       await client.navigateTo(parsedConfig.appUrl);
