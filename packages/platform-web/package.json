@@ -19,7 +19,7 @@
     "@react-native-harness/platforms": "workspace:*",
     "zod": "^3.25.67",
     "tslib": "^2.3.0",
-    "webdriver": "^9.20.1"
+    "webdriver": "^9.22.0"
   },
   "license": "MIT"
 }
