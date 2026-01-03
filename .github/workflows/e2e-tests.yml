@@ -192,7 +192,7 @@ jobs:
           projectRoot: apps/playground
   
   e2e-web:
-    name: E2E Web - ${{ matrix.app }}
+    name: E2E Web
     runs-on: macos-latest
     if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'workflow_dispatch' && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'web')) }}
 
@@ -226,18 +226,18 @@ jobs:
         uses: ./actions/web
         with:
           runner: web:safari
-          projectRoot: apps/${{ matrix.app }}
+          projectRoot: apps/playground 
 
       - name: Run React Native Harness (Chrome)
         uses: ./actions/web
         with:
           runner: web:chrome
-          projectRoot: apps/${{ matrix.app }}
+          projectRoot: apps/playground
 
       - name: Run React Native Harness (Firefox)
         uses: ./actions/web
         with:
           runner: web:firefox
-          projectRoot: apps/${{ matrix.app }}
+          projectRoot: apps/playground
 
       
