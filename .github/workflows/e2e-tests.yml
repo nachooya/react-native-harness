@@ -194,14 +194,10 @@ jobs:
   e2e-web:
     name: E2E Web - ${{ matrix.app }}
     runs-on: macos-latest
-    needs: discover-apps
-    if: ${{ github.event.inputs.platform == 'all' || github.event.inputs.platform == 'web' }}
+    if: ${{ (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main') || (github.event_name == 'workflow_dispatch' && (github.event.inputs.platform == 'all' || github.event.inputs.platform == 'web')) }}
+
     env:
       HARNESS_DEBUG: true
-    strategy:
-      fail-fast: false
-      matrix:
-        app: ${{ fromJson(needs.discover-apps.outputs.apps) }}
 
     steps:
       - name: Checkout code
