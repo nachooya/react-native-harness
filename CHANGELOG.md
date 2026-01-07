@@ -1,3 +1,19 @@
+## 1.0.0-alpha.20 (2026-01-07)
+
+### 🩹 Fixes
+
+- Added `webSocketPort` option to `rn-harness.config` (default 3001). This allows configuring the Bridge Server port, enabling usage of custom ports without rebuilding the application. ([#44](https://github.com/callstackincubator/react-native-harness/pull/44))
+- The module mocking system has been rewritten to improve compatibility with different versions of React Native. Instead of fully overwriting Metro's module system, the new implementation surgically redirects responsibility for imports to Harness, allowing for better integration with various React Native versions while maintaining the same mocking capabilities. The module mocking API has been slightly modified as part of this rewrite. ([#49](https://github.com/callstackincubator/react-native-harness/pull/49))
+- Fixed inconsistent Android device manufacturer and model matching. Some devices reported manufacturer and model information in non-lowercased form, which could cause device identification issues. Device information is now normalized to lowercase for consistent matching. ([#45](https://github.com/callstackincubator/react-native-harness/pull/45))
+- Updated `chai` and `@vitest/expect` dependencies to resolve test crashes caused by Hermes not understanding bigint literals. ([#37](https://github.com/callstackincubator/react-native-harness/pull/37))
+- Fixed HMR (Hot Module Replacement) initialization race condition by adding retry logic with delays when disabling HMR, ensuring Harness waits for HMR to be ready before proceeding. ([#38](https://github.com/callstackincubator/react-native-harness/pull/38))
+
+### ❤️ Thank You
+
+- bheemreddy-samsara @bheemreddy-samsara
+- manud99 @manud99
+- Szymon Chmal @V3RON
+
 ## 1.0.0-alpha.19 (2025-12-21)
 
 ### 🩹 Fixes
