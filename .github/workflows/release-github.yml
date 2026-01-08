@@ -77,6 +77,83 @@ jobs:
       - name: Build packages
         run: pnpm nx run-many -t build --projects="packages/*"
 
+      - name: Patch package.json monorepo deps to tarball URLs
+        env:
+          OLD_VER: "1.0.0-alpha.20"
+          TAG: "v1.0.0-alpha.20"
+          BASE_URL: "https://github.com/nachooya/react-native-harness/releases/download"
+          SCOPE: "@react-native-harness/"
+        run: |
+          set -euo pipefail
+
+          node <<'NODE'
+          const fs = require("fs");
+          const path = require("path");
+
+          const OLD_VER = process.env.OLD_VER;
+          const TAG = process.env.TAG;
+          const BASE_URL = process.env.BASE_URL;
+          const SCOPE = process.env.SCOPE;
+
+          // Recursively find all package.json files (excluding node_modules/dist)
+          function findPackageJson(dir, out = []) {
+            for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+              if (entry.name === "node_modules" || entry.name === "dist" || entry.name === ".git") continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) findPackageJson(full, out);
+              else if (entry.isFile() && entry.name === "package.json") out.push(full);
+            }
+            return out;
+          }
+
+          function tarballUrl(pkgName) {
+            // pkgName is like "@react-native-harness/runtime"
+            const monorepoPackage = pkgName.startsWith(SCOPE)
+              ? pkgName.slice(SCOPE.length)
+              : pkgName;
+
+            return `${BASE_URL}/${TAG}/react-native-harness-${monorepoPackage}-${OLD_VER}.tgz`;
+          }
+
+          const files = findPackageJson(process.cwd());
+
+          let totalChanges = 0;
+
+          for (const file of files) {
+            const raw = fs.readFileSync(file, "utf8");
+            const pkg = JSON.parse(raw);
+
+            let changed = false;
+
+            // fields to patch
+            const depFields = [
+              "dependencies",
+              "devDependencies",
+              "peerDependencies",
+              "optionalDependencies",
+            ];
+
+            for (const field of depFields) {
+              if (!pkg[field]) continue;
+
+              for (const [name, ver] of Object.entries(pkg[field])) {
+                if (ver === OLD_VER && name.startsWith(SCOPE)) {
+                  pkg[field][name] = tarballUrl(name);
+                  changed = true;
+                }
+              }
+            }
+
+            if (changed) {
+              fs.writeFileSync(file, JSON.stringify(pkg, null, 2) + "\n");
+              console.log("Patched:", file);
+              totalChanges++;
+            }
+          }
+
+          console.log(`✅ Patched ${totalChanges} package.json files`);
+          NODE
+
       - name: Create package tarballs
         run: |
           set -euo pipefail
