@@ -112,7 +112,7 @@ jobs:
               ? pkgName.slice(SCOPE.length)
               : pkgName;
 
-            return `${BASE_URL}/${TAG}/react-native-harness-${monorepoPackage}-${OLD_VER}.tgz`;
+            return `${BASE_URL}/${TAG}/react-native-harness-${monorepoPackage}-${TAG}.tgz`;
           }
 
           const files = findPackageJson(process.cwd());
