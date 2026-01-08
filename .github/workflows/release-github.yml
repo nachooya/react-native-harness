@@ -80,7 +80,7 @@ jobs:
       - name: Patch package.json monorepo deps to tarball URLs
         env:
           OLD_VER: "workspace:*"
-          TAG: "v1.0.0-alpha.20"
+          TAG: "1.0.0-alpha.20"
           BASE_URL: "https://github.com/nachooya/react-native-harness/releases/download"
           SCOPE: "@react-native-harness/"
         run: |
