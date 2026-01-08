@@ -1,6 +1,6 @@
 {
   "name": "@react-native-harness/runtime",
-  "version": "1.0.0-alpha.19",
+  "version": "1.0.0-alpha.20",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -13,7 +13,10 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./moduleSystem": "./assets/moduleSystem.flow.js",
+    "./polyfills/harness-module-system": {
+      "import": "./assets/harness-module-system.js",
+      "default": "./assets/harness-module-system.js"
+    },
     "./entry-point": {
       "development": "./src/entry-point.ts",
       "types": "./dist/entry-point.d.ts",
