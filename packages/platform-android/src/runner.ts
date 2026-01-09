@@ -11,25 +11,57 @@ import {
 import { getAdbId } from './adb-id.js';
 import * as adb from './adb.js';
 import { getDeviceName } from './utils.js';
+import { color, logger } from '@react-native-harness/tools';
 
 const getAndroidRunner = async (
   config: AndroidPlatformConfig,
   harnessConfig: Config
 ): Promise<HarnessPlatformRunner> => {
   const parsedConfig = AndroidPlatformConfigSchema.parse(config);
-  const adbId = await getAdbId(parsedConfig.device);
 
-  if (!adbId) {
-    throw new DeviceNotFoundError(getDeviceName(parsedConfig.device));
+  const logTag = color.bgMagentaBright('[AndroidRunner]');
+
+  let adbId;
+  let deviceName = '';
+  if (parsedConfig.device) {
+    adbId = await getAdbId(parsedConfig.device);
+    deviceName = getDeviceName(parsedConfig.device);
+
+    if (!adbId) {
+      throw new DeviceNotFoundError(getDeviceName(parsedConfig.device));
+    }
+  } else {
+    const devicesIds = await adb.getDeviceIds();
+    if (devicesIds.length === 0) {
+      throw new DeviceNotFoundError('No android device found');
+    }
+
+    for (const deviceId of devicesIds) {
+      const deviceInfo = await adb.getDeviceInfo(deviceId);
+      logger.debug(
+        `${logTag} Found device id: ${color.bold(deviceId)} ${color.bgBlue(
+          '[' + deviceInfo?.manufacturer + ' - ' + deviceInfo?.model + ']'
+        )}`
+      );
+    }
+    adbId = devicesIds[0];
+    const selectedDeviceInfo = await adb.getDeviceInfo(adbId);
+    deviceName = `${selectedDeviceInfo?.manufacturer} ${selectedDeviceInfo?.model}`;
+    logger.info(
+      `${logTag} Selected device id: ${color.bold(adbId)} ${color.bgBlue(
+        '[' +
+          selectedDeviceInfo?.manufacturer +
+          ' - ' +
+          selectedDeviceInfo?.model +
+          ']'
+      )}`
+    );
   }
 
   const isInstalled = await adb.isAppInstalled(adbId, parsedConfig.bundleId);
 
   if (!isInstalled) {
-    throw new AppNotInstalledError(
-      parsedConfig.bundleId,
-      getDeviceName(parsedConfig.device)
-    );
+    throw new AppNotInstalledError(parsedConfig.bundleId, deviceName);
   }
 
   await Promise.all([

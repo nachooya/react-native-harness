@@ -2,13 +2,13 @@ import { z } from 'zod';
 
 export const AppleSimulatorSchema = z.object({
   type: z.literal('simulator'),
-  name: z.string().min(1, 'Name is required'),
-  systemVersion: z.string().min(1, 'System version is required'),
+  name: z.string().optional(),
+  systemVersion: z.string().optional(),
 });
 
 export const ApplePhysicalDeviceSchema = z.object({
   type: z.literal('physical'),
-  name: z.string().min(1, 'Name is required'),
+  name: z.string().optional(),
 });
 
 export const AppleDeviceSchema = z.discriminatedUnion('type', [

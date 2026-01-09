@@ -26,7 +26,7 @@ export const AndroidDeviceSchema = z.discriminatedUnion('type', [
 
 export const AndroidPlatformConfigSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  device: AndroidDeviceSchema,
+  device: AndroidDeviceSchema.optional(),
   bundleId: z.string().min(1, 'Bundle ID is required'),
   activityName: z
     .string()
