@@ -1,3 +1,18 @@
+## 1.0.0-alpha.21 (2026-01-15)
+
+### 🩹 Fixes
+
+- Adds Object.hasOwn polyfill to the runtime package for JSC (JavaScriptCore) compatibility. ([#53](https://github.com/callstackincubator/react-native-harness/pull/53))
+- Add automatic app restart functionality when apps fail to report ready within the configured timeout period, improving test reliability by recovering from startup failures. ([#55](https://github.com/callstackincubator/react-native-harness/pull/55))
+- Added native crash detection during test execution that automatically detects when the app crashes, skips the current test file, and continues with the next test file after restarting the app. ([#56](https://github.com/callstackincubator/react-native-harness/pull/56))
+- Bundling errors are now displayed in the CLI output, providing immediate feedback when build issues occur. ([#57](https://github.com/callstackincubator/react-native-harness/pull/57))
+
+### ❤️ Thank You
+
+- bheemreddy-samsara @bheemreddy-samsara
+- manud99 @manud99
+- Szymon Chmal @V3RON
+
 ## 1.0.0-alpha.20 (2026-01-07)
 
 ### 🩹 Fixes
