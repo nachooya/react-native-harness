@@ -1,3 +1,13 @@
+## 1.0.0-alpha.23 (2026-01-19)
+
+### 🩹 Fixes
+
+- There was a change made by mistake to the package.json of the runtime package, resulting in broken release. This is now reverted back to normal. ([8b73b17](https://github.com/callstackincubator/react-native-harness/commit/8b73b17))
+
+### ❤️ Thank You
+
+- Szymon Chmal @V3RON
+
 ## 1.0.0-alpha.22 (2026-01-19)
 
 ### 🩹 Fixes
