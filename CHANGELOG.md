@@ -1,3 +1,13 @@
+## 1.0.0-alpha.22 (2026-01-19)
+
+### 🩹 Fixes
+
+- Introduces UI testing capabilities with a new `@react-native-harness/ui` package that provides screen queries, user event simulation (press, type), and visual regression testing through `toMatchImageSnapshot`. This enables comprehensive component and integration testing with real device interactions, similar to React Testing Library but running on actual iOS and Android devices. ([#35](https://github.com/callstackincubator/react-native-harness/pull/35))
+
+### ❤️ Thank You
+
+- Szymon Chmal @V3RON
+
 ## 1.0.0-alpha.21 (2026-01-15)
 
 ### 🩹 Fixes

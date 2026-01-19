@@ -1,7 +1,7 @@
 {
   "name": "@react-native-harness/ui",
   "description": "Native UI testing module for React Native Harness.",
-  "version": "1.0.0-alpha.20",
+  "version": "1.0.0-alpha.22",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
