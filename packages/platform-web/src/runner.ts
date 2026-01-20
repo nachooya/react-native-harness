@@ -15,14 +15,22 @@ logger.setLogLevelsConfig({
 const getWebRunner = async (
   config: WebPlatformConfig
 ): Promise<HarnessPlatformRunner> => {
-
   const parsedConfig = WebPlatformConfigSchema.parse(config);
 
   const capabilities: Record<string, any> = {
     browserName: parsedConfig.browserName,
   };
 
+  const hostOptions: Partial<{
+    hostname: string;
+    port: number;
+  }> = {};
+
+  if (parsedConfig.hostname) hostOptions.hostname = parsedConfig.hostname;
+  if (parsedConfig.port !== undefined) hostOptions.port = parsedConfig.port;
+
   const client = await WebDriver.newSession({
+    ...hostOptions,
     path: '/',
     logLevel: 'warn',
     capabilities,
