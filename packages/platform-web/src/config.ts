@@ -6,6 +6,7 @@ export const WebPlatformConfigSchema = z.object({
   appUrl: z.string().url('appUrl must be a valid URL').default('http://localhost:8081'),
   hostname: z.string().optional(),
   port: z.number().min(1).max(65535).optional(),
+  showLogs: z.boolean().default(false),
 });
 
 export type WebPlatformConfig = z.infer<typeof WebPlatformConfigSchema>;

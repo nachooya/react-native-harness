@@ -21,6 +21,21 @@ const getWebRunner = async (
     browserName: parsedConfig.browserName,
   };
 
+  if (parsedConfig.showLogs) {
+    capabilities['goog:chromeOptions'] = {
+      args: ['--auto-open-devtools-for-tabs'],
+    };
+    capabilities['goog:loggingPrefs'] = {
+      browser: 'ALL', 
+    };
+    capabilities['moz:firefoxOptions'] = {
+      log: { level: 'trace' },
+    };
+    capabilities.loggingPrefs = {
+      browser: 'ALL', 
+    };
+  }
+
   const hostOptions: Partial<{
     hostname: string;
     port: number;
@@ -36,17 +51,30 @@ const getWebRunner = async (
     capabilities,
   });
 
+  const printLogs = async (action: string) => {
+    if (parsedConfig.showLogs) {
+      console.log(`${action} - browser logs:`);
+      const logs = (await client.getLogs('browser')) as any[];
+      for (const entry of logs) {
+        console.log(entry.level, entry.message);
+      }
+    }
+  };
+
   return {
     startApp: async () => {
       await client.navigateTo(parsedConfig.appUrl);
     },
     restartApp: async () => {
+      printLogs('Restart app');
       await client.navigateTo(parsedConfig.appUrl);
     },
     stopApp: async () => {
+      printLogs('Stop app');
       await client.navigateTo('about:blank');
     },
     dispose: async () => {
+      printLogs('Dispose');
       await client.deleteSession();
     },
   };
