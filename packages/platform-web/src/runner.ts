@@ -68,7 +68,6 @@ const getWebRunner = async (
       await client.navigateTo('about:blank');
     },
     dispose: async () => {
-      printLogs('Dispose');
       await client.deleteSession();
     },
   };
