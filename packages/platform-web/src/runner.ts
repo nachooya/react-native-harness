@@ -46,7 +46,8 @@ const getWebRunner = async (
   });
 
   const printLogs = async (action: string) => {
-    if (parsedConfig.showLogs) {
+    // Not available in all drivers
+    if (parsedConfig.showLogs && typeof client.getLogs === 'function') {
       console.log(`${action} - browser logs:`);
       const logs = (await client.getLogs('browser')) as any[];
       for (const entry of logs) {
