@@ -22,17 +22,11 @@ const getWebRunner = async (
   };
 
   if (parsedConfig.showLogs) {
-    capabilities['goog:chromeOptions'] = {
-      args: ['--auto-open-devtools-for-tabs'],
-    };
     capabilities['goog:loggingPrefs'] = {
       browser: 'ALL', 
     };
     capabilities['moz:firefoxOptions'] = {
       log: { level: 'trace' },
-    };
-    capabilities.loggingPrefs = {
-      browser: 'ALL', 
     };
   }
 
