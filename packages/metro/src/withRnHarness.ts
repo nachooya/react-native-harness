@@ -32,6 +32,10 @@ export const withRnHarness = <T extends MetroConfig>(
     const patchedConfig: MetroConfig = {
       ...metroConfig,
       cacheVersion: 'react-native-harness',
+      server: {
+        ...metroConfig.server,
+        forwardClientLogs: harnessConfig.forwardClientLogs ?? false,
+      },
       serializer: {
         ...metroConfig.serializer,
         getPolyfills: (...args) => [

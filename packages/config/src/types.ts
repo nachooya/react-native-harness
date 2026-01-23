@@ -60,6 +60,15 @@ export const ConfigSchema = z
       })
       .optional(),
 
+    forwardClientLogs: z
+      .boolean()
+      .optional()
+      .default(false)
+      .describe(
+        'Enable forwarding of console.log, console.warn, console.error, and other console method calls from the React Native app to the terminal. ' +
+        'When enabled, all console output from your app will be displayed in the test runner terminal with styled level indicators (log, warn, error).'
+      ),
+
     // Deprecated property - used for migration detection
     include: z.array(z.string()).optional(),
   })
