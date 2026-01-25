@@ -9,7 +9,6 @@ export default [
         'error',
         {
           ignoredFiles: ['{projectRoot}/eslint.config.{js,cjs,mjs,ts,cts,mts}'],
-          ignoredDependencies: ['@react-native-harness/bridge', '@react-native-harness/platform-android', '@react-native-harness/platform-apple', '@react-native-harness/platform-web', '@react-native-harness/platform-web-webdriver'],
         },
       ],
     },

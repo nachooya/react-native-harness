@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../platform-web-webdriver"
+    },
+    {
       "path": "../platform-web"
     },
     {

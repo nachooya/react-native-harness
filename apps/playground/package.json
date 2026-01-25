@@ -27,6 +27,7 @@
     "@react-native-harness/platform-android": "workspace:*",
     "@react-native-harness/platform-apple": "workspace:*",
     "@react-native-harness/platform-vega": "workspace:*",
-    "@react-native-harness/platform-web": "workspace:*"
+    "@react-native-harness/platform-web": "workspace:*",
+    "@react-native-harness/platform-web-webdriver": "workspace:*"
   }
 }
