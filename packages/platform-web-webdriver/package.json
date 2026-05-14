@@ -23,5 +23,13 @@
     "zod": "^3.25.67",
     "tslib": "^2.3.0"
   },
+  "devDependencies": {
+    "rollup": "^4.14.0",
+    "rollup-plugin-dts": "^6.1.1",
+    "tsup": "^8.3.5"
+  },
+  "scripts": {
+    "release": "node scripts/prepare-release.mjs"
+  },
   "license": "MIT"
 }
