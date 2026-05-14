@@ -8,6 +8,7 @@ import {
 import { getEmitter } from '@react-native-harness/tools';
 import WebDriver from 'webdriver';
 import logger from '@wdio/logger';
+import { createBridge } from './bridge.js';
 import { WebDriverPlatformConfigSchema, type WebDriverPlatformConfig } from './config.js';
 
 type WebDriverClient = Awaited<ReturnType<typeof WebDriver.newSession>>;
@@ -103,6 +104,8 @@ const getWebRunner = async (
 
   let client: WebDriverClient | null = null;
 
+  const bridge = createBridge({ getClient: () => client });
+
   const printLogs = async (action: string) => {
     if (
       !client ||
@@ -144,6 +147,7 @@ const getWebRunner = async (
       if (!client) {
         await launchBrowser();
       }
+      bridge.start();
     },
     restartApp: async () => {
       await printLogs('Restart app');
@@ -152,9 +156,11 @@ const getWebRunner = async (
       } else {
         await launchBrowser();
       }
+      bridge.start();
     },
     stopApp: async () => {
       await printLogs('Stop app');
+      bridge.stop();
       if (client) {
         await client.deleteSession();
         client = null;
@@ -162,6 +168,7 @@ const getWebRunner = async (
     },
     dispose: async () => {
       await printLogs('Dispose');
+      bridge.stop();
       if (client) {
         await client.deleteSession();
         client = null;
