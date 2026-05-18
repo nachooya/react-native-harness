@@ -107,6 +107,7 @@ For Expo projects, the `entryPoint` should be set to the path specified in the `
 | `disableViewFlattening`            | Disable view flattening in React Native (default: `false`).                                                                                               |
 | `coverage`                         | Coverage configuration object.                                                                                                                            |
 | `coverage.root`                    | Root directory for coverage instrumentation (default: `process.cwd()`).                                                                                   |
+| `coverage.native.ios.pods`         | Experimental list of CocoaPods target names to instrument for iOS native coverage.                                                                       |
 | `forwardClientLogs`                | Forward console logs from the app to the terminal (default: `false`).                                                                                     |
 | `unstable__enableMetroCache`       | Enable Metro transformation cache under `.harness/metro-cache` and log when reusing it (default: `false`).                                                |
 
@@ -126,6 +127,8 @@ A test runner defines how tests are executed on a specific platform. React Nativ
 
 Runner-specific launch options belong inside each runner config via `appLaunchOptions`.
 They are passed whenever Harness launches or relaunches the app for that runner.
+
+For `@react-native-harness/platform-web`, browser launch options such as `ignoreDefaultArgs` belong on the browser config passed to `chromium`, `chrome`, `firefox`, or `webkit`.
 
 For detailed installation and configuration instructions, please refer to the platform-specific guides:
 
@@ -347,3 +350,21 @@ Without specifying `coverage.root`, babel-plugin-istanbul may skip instrumenting
 :::tip When to use coverage.root
 Set `coverage.root` when you notice 0% coverage in your reports or when source files are not being instrumented for coverage. This commonly occurs in create-react-native-library projects and other monorepo setups.
 :::
+
+## Native iOS Coverage
+
+Harness also supports experimental native iOS coverage for selected CocoaPods.
+
+```javascript
+{
+  coverage: {
+    native: {
+      ios: {
+        pods: ['MyLibrary'],
+      },
+    },
+  },
+}
+```
+
+Use this when you want coverage data for native code exercised by your Harness tests. Native coverage currently supports iOS simulators only, with Android planned later. For setup details, see [Native Coverage](/docs/guides/native-coverage).

@@ -64,6 +64,7 @@ import { getAdditionalCliArgs } from './cli-args.js';
 import {
   logMetroCacheReused,
   logMetroPortFallback,
+  logNativeCoverageCollected,
   logRunnerStarting,
   logRunnerStillWaitingInQueue,
   logRunnerWaitingInQueue,
@@ -556,6 +557,22 @@ export const createHarnessSession = async (
       bridge.off('connected', onConnected);
       bridge.off('disconnected', onDisconnected);
       bridge.off('event', bridgeEventListener);
+
+      const nativeCoverageConfig = runtimeConfig.coverage?.native?.ios;
+      if (nativeCoverageConfig?.pods?.length && platformInstance.collectNativeCoverage) {
+        try {
+          await platformInstance.stopApp();
+          const lcovPath = await platformInstance.collectNativeCoverage({
+            pods: nativeCoverageConfig.pods,
+            outputDir: projectRoot,
+          });
+          if (lcovPath) {
+            logNativeCoverageCollected(lcovPath);
+          }
+        } catch (error) {
+          sessionLogger.warn('failed to collect native coverage: %s', error);
+        }
+      }
 
       let cleanupError: unknown;
       try {
