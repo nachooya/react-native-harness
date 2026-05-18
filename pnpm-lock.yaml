@@ -510,6 +510,9 @@ importers:
       '@wdio/logger':
         specifier: ^9.4.4
         version: 9.18.0
+      safaridriver:
+        specifier: ^1.0.0
+        version: 1.0.1
       tslib:
         specifier: ^2.3.0
         version: 2.8.1

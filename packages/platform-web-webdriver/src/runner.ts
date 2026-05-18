@@ -142,6 +142,35 @@ const getWebRunner = async (
     await client.navigateTo(parsedConfig.browser.url);
   };
 
+  // safaridriver (transitive via @wdio/utils) holds a module-level singleton that
+  // makes its next start() throw "There is already a Safaridriver instance
+  // running on port N!" until reset, even after the child process is dead.
+  // stop() kills the child and clears the singleton; no-op when the module
+  // isn't installed (non-Safari setups).
+  const resetSafaridriverSingleton = async () => {
+    try {
+      const mod = (await import('safaridriver')) as {
+        stop?: () => void;
+        default?: { stop?: () => void };
+      };
+      (mod.stop ?? mod.default?.stop)?.();
+    } catch {
+      // safaridriver unavailable; nothing to reset.
+    }
+  };
+
+  const teardownSession = async () => {
+    if (client) {
+      try {
+        await client.deleteSession();
+      } catch {
+        // Session may already be gone; proceed to reset the driver singleton anyway.
+      }
+      client = null;
+    }
+    await resetSafaridriverSingleton();
+  };
+
   return {
     startApp: async () => {
       if (!client) {
@@ -161,18 +190,12 @@ const getWebRunner = async (
     stopApp: async () => {
       await printLogs('Stop app');
       bridge.stop();
-      if (client) {
-        await client.deleteSession();
-        client = null;
-      }
+      await teardownSession();
     },
     dispose: async () => {
       await printLogs('Dispose');
       bridge.stop();
-      if (client) {
-        await client.deleteSession();
-        client = null;
-      }
+      await teardownSession();
     },
     isAppRunning: async () => {
       return client !== null;
