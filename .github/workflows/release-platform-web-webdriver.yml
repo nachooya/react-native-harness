@@ -1,0 +1,65 @@
+name: release platform-web-webdriver
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g. 1.1.1). Leave blank to use the version already in package.json.'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3.9.1
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Bundle and pack tarball
+        id: pack
+        working-directory: packages/platform-web-webdriver
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            node scripts/prepare-release.mjs "${{ inputs.version }}"
+          else
+            node scripts/prepare-release.mjs
+          fi
+          TARBALL=$(ls release/*.tgz | head -n1)
+          VERSION=$(node -p "require('./release/package.json').version")
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=platform-web-webdriver-v${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@72f2c25fcb47643c292f7107632f7a47c1df5cd8 # v2.3.2
+        with:
+          tag_name: ${{ steps.pack.outputs.tag }}
+          name: platform-web-webdriver ${{ steps.pack.outputs.version }}
+          body: |
+            Self-contained tarball for `@react-native-harness/platform-web-webdriver` v${{ steps.pack.outputs.version }}.
+
+            Install in a downstream project by pinning the tarball URL in your `package.json`:
+
+            ```json
+            "@react-native-harness/platform-web-webdriver": "https://github.com/${{ github.repository }}/releases/download/${{ steps.pack.outputs.tag }}/$(basename ${{ steps.pack.outputs.tarball }})"
+            ```
+          files: packages/platform-web-webdriver/${{ steps.pack.outputs.tarball }}
+          fail_on_unmatched_files: true

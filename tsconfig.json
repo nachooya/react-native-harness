@@ -55,6 +55,9 @@
       "path": "./packages/platform-web"
     },
     {
+      "path": "./packages/platform-web-webdriver"
+    },
+    {
       "path": "./packages/bundler-metro"
     },
     {
